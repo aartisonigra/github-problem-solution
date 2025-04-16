@@ -1,0 +1,71 @@
+PROBLESMS:
+Problem Statement
+In the land of Vitaria, there exists a powerful creature known as the Seed-Drainer. This magical creature can remove one seed from any tree it touches, weakening the tree by that amount. The wise druids of Vitaria have entrusted you with the Seed-Drainer to help restore balance to the forest.
+
+Your task is to use the Seed-Drainer to reduce the height of a tree to zero in the fewest steps possible. Each tree has a height, and in each step, the Seed-Drainer can remove one of the digits from the tree’s height, reducing the height by that digit’s value.
+
+You must figure out how to make the tree’s height zero using the fewest steps possible.
+
+Input Format
+The first line of input contains a single integer N, representing the height of the tree.
+
+Output Format
+Print a single integer, representing the minimum number of steps required to reduce the height of the tree to zero.
+
+Constraints
+1 <= N <= 10^6
+
+Sample Testcase 0
+Testcase Input
+19
+Testcase Output
+3
+Explanation
+Step 1: Subtract 9 (19 - 9 = 10) 
+Step 2: Subtract 1 (10 - 1 = 9) 
+Step 3: Subtract 9 (9 - 9 = 0)
+
+Sample Testcase 1
+Testcase Input
+27
+Testcase Output
+5
+Explanation
+Step 1: Subtract 7 (27 - 7 = 20) 
+Step 2: Subtract 2 (20 - 2 = 18) 
+Step 3: Subtract 8 (18 - 8 = 10) 
+Step 4: Subtract 1 (10 - 1 = 9) 
+Step 5: Subtract 9 (9 - 9 = 0) 
+
+SOLUTION :
+
+import java.util.Scanner;
+
+public class Main {
+    public static int minStepsToZero(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 0; // base case
+
+        for (int i = 1; i <= n; i++) {
+            dp[i] = Integer.MAX_VALUE;
+            int temp = i;
+
+            // Try all digits of i
+            while (temp > 0) {
+                int digit = temp % 10;
+                temp /= 10;
+                if (digit > 0) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - digit]);
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        System.out.println(minStepsToZero(n));
+    }
+}
+
