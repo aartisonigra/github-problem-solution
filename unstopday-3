@@ -1,0 +1,80 @@
+Problem Statement :
+
+An explorer is lost on a remote island in the middle of a vast sea. They find a small device that can send a distress signal to call for help. However, the device is low on power and can’t run all its parts at once.
+
+The device has N components, each with an energy efficiency value. To make the signal as strong as possible, the explorer decides to turn off one out of every five components. The strength of the signal depends on the average efficiency of the components still running.
+
+The explorer must carefully choose which components to turn off so the average efficiency of the remaining ones is as high as possible.
+
+Can you figure out which components the explorer should turn off to maximize the signal’s average strength?
+
+Note:
+
+Each component’s efficiency value is an integer.
+The number of components is always a multiple of five.
+The answer should show the highest possible average efficiency, rounded to five decimal places.
+Input Format
+The first line contains an integer N, the number of components.
+
+The second line contains N space-separated integers, representing the efficiency values of the components.
+
+Output Format
+Print the highest possible average efficiency of the remaining components, rounded to five decimal places. If the number of components are less than 5 then print 0.
+
+Constraints
+5 <= N <= 10^2
+
+1 <= efficiency of each comoponent <= 10^5
+
+Sample Testcase 0
+Testcase Input
+5
+1 2 3 4 5
+Testcase Output
+3.50000
+Explanation
+Removing the component with efficiency 1 will result in the highest average of the remaining components. 
+Removing the component with efficiency 1 leaves the components 2, 3, 4, and 5, resulting in an average efficiency of (2 + 3 + 4 + 5) / 4 = 3.50000.
+
+Sample Testcase 1
+Testcase Input
+10
+10 20 30 40 50 60 70 80 90 100
+Testcase Output
+65.00000
+Explanation
+We need to remove 1 component  for every 5 components. With 10 components, we need to remove 2 components. Removing 2 components optimally gives the maximum efficiency of 65.00000.
+
+SOLUTION:
+
+import java.util.*;
+
+public class Main {
+    public static float calculate_highest_average_efficiency(int N, int[] efficiencies) {
+        if (N < 5) return 0.00000f;
+
+        Arrays.sort(efficiencies);
+
+        int removeCount = N / 5;
+        long sum = 0;
+        for (int i = removeCount; i < N; i++) {
+            sum += efficiencies[i];
+        }
+
+        int remaining = N - removeCount;
+        float average = (float) sum / remaining;
+
+        return average;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int[] efficiencies = new int[N];
+        for (int i = 0; i < N; i++) {
+            efficiencies[i] = sc.nextInt();
+        }
+        float result = calculate_highest_average_efficiency(N, efficiencies);
+        System.out.printf("%.5f", result);
+    }
+}
