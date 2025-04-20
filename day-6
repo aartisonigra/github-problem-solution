@@ -1,0 +1,94 @@
+PROBLEAMS:
+
+In the kingdom of Numerica, there was an ancient relic known as the Crystal of Balance, hidden deep within the royal treasury. The relic was said to hold the power to bring prosperity or ruin, depending on the wisdom of the one who unlocked its secrets.
+
+The relic's magic could only be activated by solving a unique puzzle engraved on its surface. The puzzle read:
+
+"Divide the crystal’s four-digit magical code into two equal parts of two digits each, such that their combined energy—their product—is minimized. Only then will the crystal's true power reveal itself."
+
+The task seemed simple, but every wrong attempt risked disaster. With no zeros in the code, you, the smartest guy in the kingdom took the challenge to activate the magic.
+
+Input Format
+The first and only line of input cotains a single integer N, representing the crystal’s four-digit magical code without zeros.
+
+Output Format
+Print a single integer representing the minimum energy obtained by splitting the code.
+
+Constraints
+1111 <= N <= 9999
+
+Sample Testcase 0
+Testcase Input
+1234
+Testcase Output
+312
+Explanation
+1234: 12 × 34 = 408
+1243: 12 × 43 = 516
+1324: 13 × 24 = 312 (min)
+.     .     .
+.     .     .
+.     .     .
+
+Sample Testcase 1
+Testcase Input
+1525
+Testcase Output
+375
+Explanation
+1255: 12 ×55 = 660
+
+
+1525: 15 × 25 = 375 (min)
+
+
+1552: 15 × 52 = 780
+.     .     .
+.     .     .
+.     .     .
+
+ANSWER:
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        scanner.close();
+        System.out.println(minimumProduct(N));
+    }
+
+    public static int minimumProduct(int N) {
+        String numStr = String.valueOf(N);
+        List<String> permutations = new ArrayList<>();
+        permute(numStr.toCharArray(), 0, permutations);
+        
+        int minProduct = Integer.MAX_VALUE;
+        for (String p : permutations) {
+            int first = Integer.parseInt(p.substring(0, 2));
+            int second = Integer.parseInt(p.substring(2, 4));
+            minProduct = Math.min(minProduct, first * second);
+        }
+        return minProduct;
+    }
+
+    // Permutation Generator
+    static void permute(char[] arr, int index, List<String> result) {
+        if (index == arr.length) {
+            result.add(new String(arr));
+            return;
+        }
+        for (int i = index; i < arr.length; i++) {
+            swap(arr, i, index);
+            permute(arr, index + 1, result);
+            swap(arr, i, index);
+        }
+    }
+
+    static void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
