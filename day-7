@@ -1,0 +1,113 @@
+PROBELAMS:
+Prime-Cursed Path in the Fruitful Forest
+Problem Statement
+In the Fruitful Forest, there is a grid of trees bearing the most delicious sweet fruits. These trees are arranged neatly in rows, and each row is carefully enclosed by a wire fence. 
+
+The entrance to the forest is located at the top-left corner, and it's the only way to enter. To move deeper into the forest, one must follow a strict path:
+
+From the entrance, you must begin at the first tree in the top-left corner and travel to the end of the first row in right direction.
+Once you reach the end of the row, you must move down to the second row and continue your journey in left direction.
+This process repeats for every row in the forest, following a zig-zag pattern: top-left -> right-end -> down to second row -> left-end -> down to 3rd row and so on...
+As you move through the grid, you need to check the number of fruits on each tree. If the number of fruits on a tree is a prime number, you must skip that tree and continue your journey, as those fruits are cursed. Only the trees with non-prime numbers of fruits are worth stopping for and collecting.
+
+After completing the collection, print the list of non-prime numbers of fruits you encounter. If all numbers encountered are prime, print -1 to indicate that no non-prime fruits were found.
+
+Input Format
+The first line contains two space separated integers M and N representing the number of rows and columns of the forest grid, repectively.
+
+The next M lines contain N space separated integers each, representing the number of fruits on each tree in the forest grid.
+
+Output Format
+Print the non-prime numbers of fruits encountered during the zigzag traversal, separated by spaces. If no non-prime numbers are found, output -1.
+
+Constraints
+1 ≤ M, N ≤ 50
+
+1 ≤ matrix[i][j] ≤ 10^4
+
+Sample Testcase 0
+Testcase Input
+2 2
+2 3
+5 7
+Testcase Output
+-1
+Explanation
+2* -> 3* -> 7* -> 5* ('*' means discard)
+All numbers are prime, so the output is -1.
+
+Sample Testcase 1
+Testcase Input
+3 3
+4 5 6
+7 8 9
+10 11 12
+Testcase Output
+4 6 9 8 10 12
+Explanation
+Traverse the forest in a zigzag pattern as specified, excluding prime numbers: 5, 7, 11
+4 -> 5* -> 6 -> 9 -> 8 -> 7* -> 10 -> 11* -> 12 ('*' means discard)
+The tree with non-prime numbers of fruits are: 4, 6, 9, 8, 10, 12.
+
+SOLTIONS:
+import java.util.*;
+
+public class Main {
+
+    // Prime checker
+    public static boolean isPrime(int n) {
+        if (n <= 1) return false;
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    // Zigzag traversal logic
+    public static void zigzag_traversal(int M, int N, int[][] grid) {
+        List<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < M; i++) {
+            // Even row → left to right
+            if (i % 2 == 0) {
+                for (int j = 0; j < N; j++) {
+                    if (!isPrime(grid[i][j])) {
+                        result.add(grid[i][j]);
+                    }
+                }
+            }
+            // Odd row → right to left
+            else {
+                for (int j = N - 1; j >= 0; j--) {
+                    if (!isPrime(grid[i][j])) {
+                        result.add(grid[i][j]);
+                    }
+                }
+            }
+        }
+
+        if (result.isEmpty()) {
+            System.out.println("-1");
+        } else {
+            for (int num : result) {
+                System.out.print(num + " ");
+            }
+        }
+    }
+
+    // Main function
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int M = sc.nextInt();
+        int N = sc.nextInt();
+        int[][] grid = new int[M][N];
+
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                grid[i][j] = sc.nextInt();
+            }
+        }
+
+        zigzag_traversal(M, N, grid);
+    }
+}
