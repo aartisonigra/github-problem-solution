@@ -1,0 +1,112 @@
+Decoding Enigma: Perfect Squares in Encoded Strings
+Problem Statement
+Rookie is an aspiring cryptographer who has stumbled upon a mysterious encoded string. To crack the code, she must decode the string and analyze its properties. Specifically, after decoding, she wants to count the number of perfect square integers less than or equal to the length of the decoded string and find their sum.
+
+Encoding Rule: K[encoded_string], where the encoded_string inside the square brackets is repeated exactly 2*K times. Nested encodings are possible, meaning the encoded_string can itself be encoded in the same format.
+
+Rookie needs your help to decode the string and calculate the desired values.
+
+Input Format
+The first and only line of input cotains the encoded string which we need to decode.
+
+Output Format
+Print two space separated integers representing the count and the sum.
+
+Constraints
+1 <= K <= 10^3
+
+Sample Testcase 0
+Testcase Input
+2[a]3[b]
+Testcase Output
+3 14
+Explanation
+Encoded String: 2[a]3[b]
+After decoding: aaaabbbbbb
+String length: 10
+Count of perfect square less than equal to 10 : 1, 4, 9 that is 3
+Sum of perfect squares: 1 + 4 + 9 = 14
+
+Sample Testcase 1
+Testcase Input
+2[ab[3[c]]
+Testcase Output
+5 55
+Explanation
+Encoded String: 2[ab3[c]]
+After decoding: abccccccabccccccabccccccabcccccc
+String length: 32
+Count of perfect square less than equal to 32 : 1, 4, 9, 16 and 25 that is 5
+Sum of perfect squares: 1 + 4 + 9 +16 + 25 = 55
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String encoded_string = scanner.nextLine().trim();
+
+        int[] result = userLogic(encoded_string);
+
+        System.out.println(result[0] + " " + result[1]);
+    }
+
+    public static int[] userLogic(String encoded_string) {
+        Stack<String> stack = new Stack<>();
+        int i = 0;
+
+        while (i < encoded_string.length()) {
+            char c = encoded_string.charAt(i);
+
+            if (Character.isDigit(c)) {
+                // Extract full number
+                StringBuilder num = new StringBuilder();
+                while (i < encoded_string.length() && Character.isDigit(encoded_string.charAt(i))) {
+                    num.append(encoded_string.charAt(i));
+                    i++;
+                }
+                stack.push(num.toString());
+            } else if (c == '[') {
+                stack.push("[");
+                i++;
+            } else if (c == ']') {
+                // Pop until [
+                StringBuilder str = new StringBuilder();
+                while (!stack.isEmpty() && !stack.peek().equals("[")) {
+                    str.insert(0, stack.pop());
+                }
+                stack.pop(); // Remove "["
+                int k = Integer.parseInt(stack.pop());
+                String repeated = str.toString().repeat(2 * k);
+                stack.push(repeated);
+                i++;
+            } else {
+                // Any character
+                stack.push(String.valueOf(c));
+                i++;
+            }
+        }
+
+        // Form the decoded string
+        StringBuilder decoded = new StringBuilder();
+        while (!stack.isEmpty()) {
+            decoded.insert(0, stack.pop());
+        }
+
+        int len = decoded.length();
+
+        // Count perfect squares ≤ len
+        int count = 0;
+        int sum = 0;
+        for (int j = 1; j * j <= len; j++) {
+            count++;
+            sum += j * j;
+        }
+
+        return new int[]{count, sum};
+    }
+}
+
+  
