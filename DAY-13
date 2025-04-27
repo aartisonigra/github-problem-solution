@@ -1,0 +1,78 @@
+Optimal Energy Zone Allocation
+Problem Statement
+In a futuristic space station, a garden of genetically engineered plants generates energy pods, represented as an array E of size N, where E[i] is the number of energy pods produced by the i-th plant. Commander Zeta must divide the garden into three continuous zones: Alpha, Beta and Gamma where the zone size of alpha must be same as the zone size of gamma.
+
+Alpha and Gamma for the Energy Council, and Beta for the Defense Alliance. Since Zone Beta is inefficient and wastes energy, Zeta decides to ensure its energy is always less than the combined energy of Zones Alpha and Gamma.
+Determine the total number of ways this division can be accomplished while adhering to this condition.
+
+Input Format
+The first line contains an integer N representing the number of plants.
+
+The second line contains N space separated integers, where the i-th integer represents the energy pods produced by the i-th plant.
+
+Output Format
+Print a single integer representing the total number of ways to divide the garden into the three zones such that the sum of energy pods in Alpha and Gamma combined is greater than the energy pods in Beta.
+
+Constraints
+1 <= N <= 10^5
+
+1 <= E[i] <= 10^5
+
+Sample Testcase 0
+Testcase Input
+4
+3 3 3 3
+Testcase Output
+0
+Explanation
+For the array [3, 3, 3, 3], there are no valid divisions possible.
+
+Sample Testcase 1
+Testcase Input
+5
+1 2 3 4 5
+Testcase Output
+1
+Explanation
+For the array [1, 2, 3, 4, 5], there will be only one possible division.
+Alpha: [1, 2], Beta: [3], Gamma: [4, 5] → (3 + 9 > 3)
+
+
+SOLUTIONS:
+
+import java.util.Scanner;
+
+public class Main {
+    public static int countValidPartitions(int[] E, int N) {
+        long[] prefix = new long[N + 1];
+        for (int i = 0; i < N; ++i) {
+            prefix[i + 1] = prefix[i] + E[i];
+        }
+        
+        int count = 0;
+        
+        for (int len = 1; len * 2 < N; ++len) {
+            long sumAlpha = prefix[len] - prefix[0];
+            long sumBeta = prefix[N - len] - prefix[len];
+            long sumGamma = prefix[N] - prefix[N - len];
+            
+            if (sumAlpha + sumGamma > sumBeta) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int[] E = new int[N];
+        for (int i = 0; i < N; ++i) {
+            E[i] = scanner.nextInt();
+        }
+        
+        int result = countValidPartitions(E, N);
+        System.out.println(result);
+    }
+}
