@@ -1,0 +1,77 @@
+Dungeon Escape: The Path of Keys
+Problem Statement
+In a mysterious dungeon, a brave adventurer is trapped and must escape through a tunnel filled with N locked gates. Each gate must be unlocked before proceeding further. The adventurer has two types of magical keys:
+
+A single-use key that can unlock one gate at a time.
+A master key that can unlock two consecutive gates at once.
+To escape, the adventurer must unlock all N gates using any combination of these keys. Since the dungeon is ancient and filled with traps, the adventurer must determine the number of distinct ways to escape before making a move.
+
+Your task is to find the number of different ways the adventurer can reach the end of the tunnel using these two types of keys. Since the answer can be large, compute the result modulo 10^9 + 7.
+
+Input Format
+The first line of input contains a single number N, representing the number of locked gates.
+
+Output Format
+Print a single number representing the number of distinct ways the adventurer can escape the dungeon.
+
+Constraints
+1 ≤ N < 92
+
+Sample Testcase 0
+Testcase Input
+4
+Testcase Output
+5
+Explanation
+The adventurer can escape using the following sequences:
+(1 → 1 → 1 → 1)
+(1 → 1 → 2)
+(1 → 2 → 1)
+(2 → 1 → 1)
+(2 → 2)
+
+
+Total ways = 5
+
+Sample Testcase 1
+Testcase Input
+6
+Testcase Output
+13
+Explanation
+There will be 13 possible way to unlock all the doors to escape.
+
+
+SOLUTIONS:
+
+import java.util.Scanner;
+
+public class Main {
+    // Function to count ways to unlock N gates
+    public static int countWays(int n) {
+        int MOD = 1_000_000_007;
+
+        // Base cases
+        if (n == 1) return 1;  // F(2)
+        if (n == 2) return 2;  // F(3)
+
+        long prev2 = 1; // F(1)
+        long prev1 = 2; // F(2)
+        long current = 0;
+
+        for (int i = 3; i <= n; i++) {
+            current = (prev1 + prev2) % MOD;
+            prev2 = prev1;
+            prev1 = current;
+        }
+
+        return (int) current;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt(); // Number of gates
+        System.out.println(countWays(n)); // Output result
+        scanner.close();
+    }
+}
