@@ -1,0 +1,159 @@
+Reverse Spiral Traversal with Prime Extraction
+Problem Statement
+You are given a rectangular matrix mat[][] of size M x N. Your task is to return three outputs while traversing the matrix in spiral order, starting from the bottom-right corner and moving towards the top-left corner.
+
+Requirements:
+
+First Output: The elements of the matrix in spiral order starting from bottom-right (M-1, N-1).
+Second Output: An array containing only the prime numbers in the order they appear in the traversal. return 0 if no prime exist.
+Third Output: The sum of all prime numbers found in the traversal.
+Input Format
+The first line contains two integers, M and N, representing the dimensions of the matrix.
+
+The next M lines contain N space-separated integers, representing the matrix elements.
+
+Output Format
+Print:
+
+A single line containing the elements in reverse spiral order.
+A single line containing only the prime numbers from that sequence. return 0 in case of no primes.
+A single integer representing the sum of the prime numbers.
+Constraints
+1 <= M, N <= 1000
+
+1 <= mat[i][j] <= 10^6
+
+Sample Testcase 0
+Testcase Input
+4 4
+1  2  3  4
+5  6  7  8
+9 10 11 12
+13 14 15 16
+Testcase Output
+16 15 14 13 9 5 1 2 3 4 8 12 11 10 6 7
+13 5 2 3 11 7
+41
+Explanation
+Spiral order (reverse start): [16, 15, 14, 13, 9, 5, 1, 2, 3, 4, 8, 12, 11, 10, 6, 7]
+
+
+Prime numbers extracted: [13, 5, 2, 3, 11, 7]
+
+
+Sum of primes: 13 + 5 + 2 + 3 + 11 + 7 = 41
+
+Sample Testcase 1
+Testcase Input
+3 5
+29  30  31  32  33
+23  24  25  26  27
+19  17  13  11   7
+Testcase Output
+7 11 13 17 19 23 29 30 31 32 33 27 26 25 24
+7 11 13 17 19 23 29 31
+150
+Explanation
+Step-by-Step Spiral Order (Reverse)
+
+
+Start from bottom-right (7) → move left: [7, 11, 13, 17, 19]
+Move up (column 0): [7, 11, 13, 17, 19, 23]
+Move right (row 0): [7, 11, 13, 17, 19, 23, 29, 30, 31, 32, 33]
+Move down (column 4): [7, 11, 13, 17, 19, 23, 29, 30, 31, 32, 33, 27]
+Move left (row 1): [7, 11, 13, 17, 19, 23, 29, 30, 31, 32, 33, 27, 26, 25, 24]
+
+Prime Numbers in this Order
+Extracting only prime numbers from the sequence: 7 11 13 17 19 23 29 31
+
+Sum of Prime Numbers: 7 + 11 + 13 + 17 + 19 + 23 + 29 + 31 = 150
+
+ SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+
+    // Function to check if a number is prime
+    public static boolean isPrime(int num) {
+        if (num < 2) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++)
+            if (num % i == 0) return false;
+        return true;
+    }
+
+    public static void reverse_spiral_and_primes(int[][] mat, int m, int n) {
+        int top = 0, bottom = m - 1;
+        int left = 0, right = n - 1;
+
+        List<Integer> spiral = new ArrayList<>();
+
+        while (top <= bottom && left <= right) {
+            // Move left ←
+            for (int i = right; i >= left; i--) {
+                spiral.add(mat[bottom][i]);
+            }
+            bottom--;
+
+            // Move up ↑
+            for (int i = bottom; i >= top; i--) {
+                spiral.add(mat[i][left]);
+            }
+            left++;
+
+            if (top <= bottom) {
+                // Move right →
+                for (int i = left; i <= right; i++) {
+                    spiral.add(mat[top][i]);
+                }
+                top++;
+            }
+
+            if (left <= right) {
+                // Move down ↓
+                for (int i = top; i <= bottom; i++) {
+                    spiral.add(mat[i][right]);
+                }
+                right--;
+            }
+        }
+
+        // Print Spiral
+        for (int val : spiral) System.out.print(val + " ");
+        System.out.println();
+
+        // Filter Primes
+        List<Integer> primes = new ArrayList<>();
+        int primeSum = 0;
+        for (int val : spiral) {
+            if (isPrime(val)) {
+                primes.add(val);
+                primeSum += val;
+            }
+        }
+
+        // Print Primes
+        if (primes.isEmpty()) {
+            System.out.println(0);
+        } else {
+            for (int p : primes) System.out.print(p + " ");
+            System.out.println();
+        }
+
+        // Print Sum
+        System.out.println(primeSum);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int m = sc.nextInt();
+        int n = sc.nextInt();
+        int[][] mat = new int[m][n];
+
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                mat[i][j] = sc.nextInt();
+
+        reverse_spiral_and_primes(mat, m, n);
+    }
+}
