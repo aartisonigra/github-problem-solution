@@ -1,0 +1,160 @@
+Allocate Maximum Workload
+Problem Statement
+You are given an array tasks[] of integers, where each element tasks[i] represents the time (in minutes) required to complete the i-th task. You also have an integer W representing the number of workers available. The task is to allocate tasks to each worker such that:
+
+Each worker gets at least one task.
+
+Each worker is assigned a contiguous sequence of tasks.
+
+No task is assigned to more than one worker.
+
+The objective is to maximize the minimum workload among all workers. In other words, find the allocation where the worker with the least workload gets the maximum possible workload.
+
+Input Format
+An integer n denoting the number of tasks.
+
+An array tasks[] of size N, where tasks[i] represents the time required for the i-th task.
+
+An integer W representing the number of available workers.
+
+Output Format
+Print a single integer, which is the maximum possible minimum workload that a worker can have under an optimal task allocation.
+
+Constraints
+1 ≤ N ≤ 10^6
+
+1 ≤ tasks[i] ≤ 10^3
+
+1 ≤  W  ≤ 10^3
+
+Sample Testcase 0
+Testcase Input
+4
+20 30 40 50
+2
+Testcase Output
+90
+Explanation
+
+
+Possible allocations:
+
+
+
+
+[20, 30] & [40, 50] → Max pages = 90 ✅ (Optimal)
+
+
+
+
+[20, 30, 40] & [50] → Max pages = 90
+
+
+
+
+
+
+Minimum possible max pages = 90
+
+
+
+Sample Testcase 1
+Testcase Input
+5
+10 20 30 40 50
+3
+Testcase Output
+60
+Explanation
+
+
+Possible allocations:
+
+
+
+
+[10, 20] & [30] & [40, 50] → Max pages = 90
+
+
+
+
+[10, 20, 30] & [40] & [50] → Max pages = 60 ✅ (Optimal)
+
+
+
+
+
+
+Minimum possible max pages = 60
+
+
+solutions:
+
+import java.util.*;
+
+public class Main {
+    
+    // Function to check if it's possible to divide tasks with max workload <= mid
+    public static boolean isPossible(int[] tasks, int W, int mid) {
+        int count = 1;  // At least one worker
+        int currentWorkload = 0;
+
+        // Loop through the tasks
+        for (int time : tasks) {
+            currentWorkload += time;  // Add the current task to current worker's workload
+
+            // If the current worker's workload exceeds `mid`, assign the task to the next worker
+            if (currentWorkload > mid) {
+                count++;
+                currentWorkload = time;  // Assign the current task to the next worker
+            }
+        }
+
+        return count <= W;  // If we can allocate all tasks with <= W workers, return true
+    }
+
+    // Function to find the optimal maximum minimum workload
+    public static int user_logic(int n, int[] tasks, int W) {
+        int low = 0;  // Minimum workload (it can be max task time, because one worker must take at least one task)
+        int high = 0;  // Maximum workload (it can be the sum of all tasks)
+
+        // Set the low to the max task time, and high to the sum of all tasks
+        for (int time : tasks) {
+            low = Math.max(low, time);  // The minimum possible workload is the max time of any task
+            high += time;  // Total sum of tasks is the maximum possible workload
+        }
+
+        int result = high;  // Initialize the result to the maximum possible workload
+
+        // Binary search to find the best minimum workload
+        while (low <= high) {
+            int mid = (low + high) / 2;  // Mid value for the binary search
+
+            // If it's possible to divide tasks with `mid` as the max workload
+            if (isPossible(tasks, W, mid)) {
+                result = mid;  // Update the result to the mid value
+                high = mid - 1;  // Try for a smaller max workload
+            } else {
+                low = mid + 1;  // Try for a larger max workload
+            }
+        }
+
+        return result;  // Return the optimal maximum minimum workload
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();  // Number of tasks
+        int[] tasks = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            tasks[i] = sc.nextInt();  // Task times
+        }
+
+        int W = sc.nextInt();  // Number of workers
+
+        int result = user_logic(n, tasks, W);
+        System.out.println(result);  // Print the result
+    }
+}
+
