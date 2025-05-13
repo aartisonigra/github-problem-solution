@@ -1,0 +1,90 @@
+PROBLEAMS:
+You are given a string s and an integer t, representing the number of transformations to perform. In one transformation, every character in s is replaced according to the following rules:
+
+If the character is 'z', replace it with the string "ab".
+Otherwise, replace it with the next character in the alphabet. For example, 'a' is replaced with 'b', 'b' is replaced with 'c', and so on.
+Return the length of the resulting string after exactly t transformations.
+
+Since the answer may be very large, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: s = "abcyy", t = 2
+
+Output: 7
+
+Explanation:
+
+First Transformation (t = 1):
+'a' becomes 'b'
+'b' becomes 'c'
+'c' becomes 'd'
+'y' becomes 'z'
+'y' becomes 'z'
+String after the first transformation: "bcdzz"
+Second Transformation (t = 2):
+'b' becomes 'c'
+'c' becomes 'd'
+'d' becomes 'e'
+'z' becomes "ab"
+'z' becomes "ab"
+String after the second transformation: "cdeabab"
+Final Length of the string: The string is "cdeabab", which has 7 characters.
+Example 2:
+
+Input: s = "azbk", t = 1
+
+Output: 5
+
+Explanation:
+
+First Transformation (t = 1):
+'a' becomes 'b'
+'z' becomes "ab"
+'b' becomes 'c'
+'k' becomes 'l'
+String after the first transformation: "babcl"
+Final Length of the string: The string is "babcl", which has 5 characters.
+
+SOLUTIONS:
+
+class Solution {
+    static final int MOD = 1000000007;
+
+    public int lengthAfterTransformations(String s, int t) {
+        // Frequency array: freq[i] = number of times character (char)('a' + i) appears
+        long[] freq = new long[26];
+
+        // Initial frequencies from string s
+        for (char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        // Perform t transformations
+        for (int step = 0; step < t; step++) {
+            long[] newFreq = new long[26]; // To store updated frequencies after this transformation
+            for (int i = 0; i < 26; i++) {
+                if (i == 25) {
+                    // 'z' becomes "ab"
+                    newFreq[0] = (newFreq[0] + freq[25]) % MOD; // a
+                    newFreq[1] = (newFreq[1] + freq[25]) % MOD; // b
+                } else {
+                    // Other characters become next character
+                    newFreq[i + 1] = (newFreq[i + 1] + freq[i]) % MOD;
+                }
+            }
+            freq = newFreq; // Update frequencies for the next transformation
+        }
+
+        // Total length is the sum of all character frequencies
+        long totalLength = 0;
+        for (long count : freq) {
+            totalLength = (totalLength + count) % MOD;
+        }
+
+        return (int) totalLength;
+    }
+}
+
