@@ -1,0 +1,123 @@
+PROBLEMAS:
+
+Lexicographically Largest String with More Distinct Subsequences
+Problem Statement
+You are given two strings s1 and s2 of equal lengths. Your task is to determine which of the two strings has more distinct subsequences. If both strings have the same number of distinct subsequences, return the lexicographically largest string.
+
+A subsequence of a string is a sequence derived from the string by deleting some or no characters without changing the order of the remaining characters.
+
+Input Format
+The input consists of two strings s1 and s2 of equal lengths.
+
+Output Format
+Output the string which has more distinct subsequences.
+
+If both strings have the same number of distinct subsequences, output the lexicographically larger string.
+
+Constraints
+1 <= len(s1), len(s2) <= 30
+
+The strings s1 and s2 consist of lowercase English letters ('a' to 'z').
+
+Sample Testcase 0
+Testcase Input
+abc
+acb
+Testcase Output
+acb
+Explanation
+Both "abc" and "acb" have the same number of distinct subsequences. Let's illustrate:
+
+
+For "abc":
+
+
+
+
+Subsequence possibilities are: {"", "a", "b", "c", "ab", "ac", "bc", "abc"}
+
+
+
+
+For "acb":
+
+
+
+
+Subsequence possibilities are: {"", "a", "c", "b", "ac", "ab", "cb", "acb"}
+
+
+
+
+These two sets of subsequences have the same number (8), so the next factor is lexicographical order.
+
+Sample Testcase 1
+Testcase Input
+gfg
+ggg
+Testcase Output
+gfg
+Explanation
+
+
+"gfg" has 6 distinct subsequences: {"", "g", "f", "g", "fg", "gf", "gfg"}.
+
+
+
+
+"ggg" has 3 distinct subsequences: {"", "g", "gg", "ggg"}.
+
+
+
+
+Therefore, "gfg" has more distinct subsequences, so the output is "gfg".
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    // Function to count distinct subsequences using DP
+    public static int countDistinctSubsequences(String s) {
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1;  // empty string
+
+        Map<Character, Integer> lastSeen = new HashMap<>();
+
+        for (int i = 1; i <= n; i++) {
+            char ch = s.charAt(i - 1);
+            dp[i] = 2 * dp[i - 1];
+
+            if (lastSeen.containsKey(ch)) {
+                int j = lastSeen.get(ch);
+                dp[i] -= dp[j - 1];  // remove duplicate subsequences
+            }
+            lastSeen.put(ch, i);
+        }
+
+        return dp[n];
+    }
+
+    public static String better_string(String s1, String s2) {
+        int count1 = countDistinctSubsequences(s1);
+        int count2 = countDistinctSubsequences(s2);
+
+        if (count1 > count2) {
+            return s1;
+        } else if (count2 > count1) {
+            return s2;
+        } else {
+            // Equal count, return lexicographically larger
+            return s1.compareTo(s2) > 0 ? s1 : s2;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s1 = scanner.next();
+        String s2 = scanner.next();
+        String result = better_string(s1, s2);
+        System.out.println(result);
+    }
+}
