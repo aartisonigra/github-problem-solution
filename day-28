@@ -1,0 +1,112 @@
+Balanced Subarray with Even and Odd Sums
+Problem Statement
+In the futuristic city of Bitropolis, data flows like water, and everything runs on binary energy. The city’s Central Intelligence Grid (CIG) is maintained by a stream of encrypted integers, where each number represents a unit of power with a unique binary fingerprint.
+
+However, a sudden anomaly disrupts the power harmony. The system's core algorithm—Binary Balancer—has detected an imbalance in binary parity between the even and odd zones of the power pipeline. The even indices and odd indices are managed by separate AI modules, and they operate optimally only when the number of 1s in their binary representations is balanced.
+
+To stabilize the system and prevent a city-wide blackout, you, the lead Data Architect of Bitropolis, are given the mission:
+
+Identify the longest continuous segment in the pipeline where the binary 1s from the even-indexed energy cells match exactly with the binary 1s from the odd-indexed cells.
+
+Find the largest such segment and report its length back to CIG. The fate of Bitropolis depends on your ability to restore the binary equilibrium.
+
+Input Format
+The first line of input contains array of integers each separated by space.
+
+Output Format
+Print the length of the largest contiguous subarray such that the sum of elements at even indices is equal to the sum of elements at odd indices.
+
+Constraints
+1 <= len(arr) <= 10^5
+
+1 <= arr[i] <= 5*10^5
+
+Sample Testcase 0
+Testcase Input
+8 3 15 1 6 10 5 2
+Testcase Output
+5
+Explanation
+Count of 1s in the binary representation:
+[1, 2, 4, 1, 2, 2, 2, 1]
+If we look at the subarray from index 3 to 7
+Count of 1s at odd indices: 1 + 2 + 1 = 4.
+Count of 1s at even indices: 2 + 2 = 4.
+Therefore, the longest subarray length is 5.
+
+Sample Testcase 1
+Testcase Input
+12 23 34 45 56 67 78 89 90
+Testcase Output
+9
+Explanation
+Count of 1s in the binary representation:
+[2, 4, 2, 4, 3, 3, 4, 4, 4]
+If we look at the subarray from index 0 to 8
+Count of 1s at odd indices: 4 + 4 + 3 + 4 = 15.
+Count of 1s at even indices: 2 + 2 + 3 + 4 + 4 = 15.
+Therefore, the longest subarray length is 9.
+
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    
+    // Function to count number of 1s in binary representation
+    public static int countOnes(int num) {
+        return Integer.bitCount(num); // Java inbuilt method
+    }
+
+    public static int longest_balanced_subarray(int[] arr) {
+        int n = arr.length;
+
+        // Step 1: Convert to array of 1s count
+        int[] ones = new int[n];
+        for (int i = 0; i < n; i++) {
+            ones[i] = countOnes(arr[i]);
+        }
+
+        // Step 2: HashMap to store first occurrence of a diff
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1); // base case: diff 0 at index -1
+
+        int maxLen = 0;
+        int evenSum = 0;
+        int oddSum = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                evenSum += ones[i];
+            } else {
+                oddSum += ones[i];
+            }
+
+            int diff = evenSum - oddSum;
+
+            if (map.containsKey(diff)) {
+                int prevIndex = map.get(diff);
+                maxLen = Math.max(maxLen, i - prevIndex);
+            } else {
+                map.put(diff, i);
+            }
+        }
+
+        return maxLen;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] inputStr = scanner.nextLine().split(" ");
+        int n = inputStr.length;
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(inputStr[i]);
+        }
+
+        int result = longest_balanced_subarray(arr);
+        System.out.println(result);
+    }
+}
