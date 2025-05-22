@@ -1,0 +1,125 @@
+PEORBLEMAS:
+
+Fix Sum
+Problem Statement
+You are given a sequence consisting of N^2 integers, with the first N integers provided as input. This sequence exhibits periodic behavior such that the value at each index i repeats every N position, meaning A(i)=A(i+N).
+
+Your task is to determine the smallest positive integer x such that for any sequence of positive integers that adds up to a specified sum S (also provided in the input), the integer x can be included as a subsequence.
+
+Input Format
+In the first line you are give two integers denoting N and S. 
+
+In the second line you are given N numbers separated by space ( A1 A2 … An)
+
+Output Format
+Print the the minimum integer possible as per the question.
+
+Constraints
+1≤N≤2*10^5
+1<=S<=min(N,2*10^5)
+1<=Ai<=S
+For every positive integer x (1<=x<=S),(A1,A2,…,An) contains at least one occurrence of x
+
+Sample Testcase 0
+Testcase Input
+1 1
+1
+Testcase Output
+1
+Explanation
+Only 1 sequence possible
+Sample Testcase 1
+Testcase Input
+6 4
+1 1 2 1 4 3
+Testcase Output
+9
+Explanation
+There are eight sequences SEQ to consider SEQ=(1,1,1,1),(1,1,2),(1,2,1),(1,3),(2,1,1),(2,2),(3,1),4
+For L=8 ,SEQ=(2,2) is not a subsequence of (A1,A2,….,A8)=(1,1,2,1,4,3,1,1)
+For L=9 every SEQ is a subsequence so 9 will be the output
+
+
+SOLTUIONS:
+
+import java.util.*;
+
+public class Main {
+
+    // Frequency Map: count of each value in A
+    public static Map<Integer, Integer> buildFreq(int[] arr) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int val : arr) {
+            freq.put(val, freq.getOrDefault(val, 0) + 1);
+        }
+        return freq;
+    }
+
+    // Function to generate all compositions of sum S
+    public static void generateCompositions(int s, List<Integer> current, List<List<Integer>> result) {
+        if (s == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = 1; i <= s; i++) {
+            current.add(i);
+            generateCompositions(s - i, current, result);
+            current.remove(current.size() - 1);
+        }
+    }
+
+    // Check if a given sequence is a subsequence of big array
+    public static boolean isSubsequence(List<Integer> big, List<Integer> small) {
+        int i = 0, j = 0;
+        while (i < big.size() && j < small.size()) {
+            if (big.get(i).equals(small.get(j))) {
+                j++;
+            }
+            i++;
+        }
+        return j == small.size();
+    }
+
+    public static int userLogic(int n, int s, int[] arr) {
+        Map<Integer, Integer> freq = buildFreq(arr);
+
+        // All compositions of S using values 1 to S
+        List<List<Integer>> compositions = new ArrayList<>();
+        generateCompositions(s, new ArrayList<>(), compositions);
+
+        // Try every x from S to very high number
+        for (int x = s; x <= n * s; x++) {
+            List<Integer> fullArray = new ArrayList<>();
+            for (int i = 0; i < x; i++) {
+                fullArray.add(arr[i % n]);  // Periodic behavior
+            }
+
+            boolean allOk = true;
+            for (List<Integer> comp : compositions) {
+                if (!isSubsequence(fullArray, comp)) {
+                    allOk = false;
+                    break;
+                }
+            }
+
+            if (allOk) {
+                return x;
+            }
+        }
+
+        return -1; // fallback
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int s = scanner.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        int result = userLogic(n, s, arr);
+        System.out.println(result);
+    }
+}
