@@ -1,0 +1,111 @@
+Balanced Energy Subarray
+Problem Statement
+You are given an array A of N positive integers, where each element represents the energy level of a device on day i. You are also given an integer K, which represents the window size.
+
+A subarray of size K is said to be balanced if the sum of the left half of the window is equal to the sum of the right half.
+
+If K is even: compare the sum of the first K/2 elements with the last K/2 elements.
+
+If K is odd: ignore the middle element and compare the sum of the floor(K/2) elements on either side.
+Your task is to count the number of such balanced subarrays of size K.
+
+Input Format
+The first line contains two integers N and K representing the size of the array and the window size.
+
+
+The second line contains N space-separated integers representing the energy levels of each device.
+
+Output Format
+Print a single integer representing the number of balanced subarrays of size K.
+
+Constraints
+1 ≤ N ≤ 10^5
+
+1 ≤ K ≤ N
+
+1 ≤ A[i] ≤ 10^4
+
+Sample Testcase 0
+Testcase Input
+7 3
+1 2 3 2 1 3 1
+Testcase Output
+2
+Explanation
+k = 3 (odd), so ignore the middle element and compare the first and last:
+- [1, 2, 3] → 1 ≠ 3 
+- [2, 3, 2] → 2 = 2 (ACCEPTED)
+- [3, 2, 1] → 3 ≠ 1 
+- [2, 1, 3] → 2 ≠ 3
+- [1, 3, 1] → 1 = 1 (ACCEPTED)
+
+
+Balanced subarrays = 2
+
+Sample Testcase 1
+Testcase Input
+8 4
+2 1 3 2 4 1 3 2
+Testcase Output
+2
+Explanation
+Window size K = 4 (even), so compare the sum of the first 2 and the last 2 in each window:
+- [2, 1, 3, 2] → 2+1 vs 3+2 → 3 ≠ 5
+- [1, 3, 2, 4] → 1+3 vs 2+4 → 4 ≠ 6
+- [3, 2, 4, 1] → 3+2 vs 4+1 → 5 = 5 (ACCEPTED)
+- [2, 4, 1, 3] → 2+4 vs 1+3 → 6 ≠ 4
+- [4, 1, 3, 2] → 4+1 vs 3+2 → 5 = 5 (ACCEPTED)
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static int countBalancedSubarrays(int[] arr, int k) {
+        int n = arr.length;
+        int count = 0;
+
+        int[] prefix = new int[n + 1];
+        for(int i = 0;i < n;i++){
+            prefix[i + 1] = prefix[i] + arr[i];
+        }
+        int half = k / 2;
+
+        for (int i = 0; i <= n - k; i++) {
+            // Window from i to i+k-1
+
+            if (k % 2 == 0) {
+                // Even k: compare sum of first half and second half
+                int leftSum = prefix[i + half] - prefix[i];
+                int rightSum = prefix[i + k] - prefix[i + half];
+                if (leftSum == rightSum) {
+                    count++;
+                }
+            } else {
+                // Odd k: ignore middle element
+                // left half = floor(k/2)
+                // right half = floor(k/2)
+                int leftSum = prefix[i + half] - prefix[i];
+                int rightSum = prefix[i + k] - prefix[i + half + 1];
+                if (leftSum == rightSum) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int k = scanner.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        int result = countBalancedSubarrays(arr, k);
+        System.out.println(result);
+    }
+}
