@@ -51,3 +51,5 @@ https://unstop.com/code/practice/491699
 |2025-05-22 | (https://unstop.com/code/practice/298719)
 
 |2025-05-30 | (https://unstop.com/code/practice/569817)
+
+|2025-06-02 | (https://unstop.com/code/practice/567954)
