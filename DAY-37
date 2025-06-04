@@ -1,0 +1,116 @@
+Optimal Meeting Room Allocation
+Problem Statement
+You are the operations manager at a busy co-working space in downtown Mumbai. Every day, various startups and freelancers book meeting rooms for client calls, brainstorming sessions, and team presentations. Each booking has a specified start and end time (both in minutes from the start of the day), and due to the professional nature of these meetings, no room can host more than one job at a time.
+
+Today, you received the full list of bookings for the day and need to ensure there's no scheduling conflict. Your goal is to determine the minimum number of meeting rooms required so that all jobs can be scheduled without any overlap.
+
+Can you write a program that helps the co-working space operate smoothly by calculating this number?
+
+Input Format
+First line: An integer N — number of jobs
+Next N lines: Each line contains two integers — start and end time of a job
+Output Format
+A single integer — the minimum number of rooms required.
+
+Constraints
+1 ≤ N ≤ 10^5
+
+0 ≤ start < end ≤ 10^9
+
+All jobs are independent
+Sample Testcase 0
+Testcase Input
+3
+10 20
+20 30
+30 40
+Testcase Output
+1
+Explanation
+
+Job 1 runs from 10 to 20
+
+
+Job 2 starts exactly at 20, right when Job 1 ends → can reuse the same room
+
+
+Job 3 starts at 30, right when Job 2 ends → again, can reuse the same room
+
+
+If a job starts exactly when the previous job ends, then it can reuse the same room.
+ Job 2 starts at 20, right when Job 1 ends, so it reuses the room.
+ Job 3 starts at 30, right when Job 2 ends, so it also reuses the same room.
+
+
+Since there are no overlapping jobs, only 1 room is needed.
+
+Sample Testcase 1
+Testcase Input
+4
+0 30
+5 10
+15 20
+25 35
+Testcase Output
+2
+Explanation
+Job 1 (0–30) and Job 2 (5–10) overlap → need 2 rooms
+
+
+If Job 2 starts before Job 1 ends, then they need separate rooms. Otherwise, they can share a room. 
+
+
+Job 3 (15–20) can share with Job 2’s room (after 10)
+
+
+ Since Job 2 ends before Job 3 starts, Job 3 can reuse Job 2’s room
+
+
+Job 4 (25–35) overlaps with Job 1’s end → needs second room
+
+
+ If Job 4 starts before Job 1 ends, then it cannot share Job 1’s room and needs another room.
+
+
+So, Maximum rooms needed at the same time = 2
+
+
+SOLUTIONS:
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+
+        int[] start = new int[N];
+        int[] end = new int[N];
+
+        for (int i = 0; i < N; ++i) {
+            start[i] = scanner.nextInt();
+            end[i] = scanner.nextInt();
+        }
+
+        int result = min_rooms(start, end);
+        System.out.println(result);
+    }
+
+    public static int min_rooms(int[] start, int[] end) {
+        Arrays.sort(start);
+        Arrays.sort(end);
+
+        int rooms = 0, endPtr = 0;
+
+        for (int i = 0; i < start.length; i++) {
+            // अगर current meeting का start time >= earliest end time
+            // तो एक room free हो गया है
+            if (start[i] >= end[endPtr]) {
+                endPtr++; // reuse the room
+            } else {
+                rooms++;  // need new room
+            }
+        }
+
+        return rooms;
+    }
+}
