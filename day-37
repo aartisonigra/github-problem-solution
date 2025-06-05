@@ -1,0 +1,112 @@
+Power Cut Panic
+Problem Statement
+You are the chief engineer for the city's electricity board in Pune. A recent thunderstorm has caused significant damage to the city’s power grid. While emergency teams have managed to identify and restore several working connections, many power cables are still down, leading to partial blackouts in various neighborhoods.
+
+The city has n power stations (numbered from 1 to n), and only m power cables are currently operational. Each working cable connects exactly two power stations and ensures electricity can flow between them. Due to the damaged infrastructure, some stations are no longer connected to others, resulting in isolated groups.
+
+Your job is to determine how many completely disconnected regions exist in the city. A region is defined as a group of power stations that are still connected directly or indirectly through working cables, but not connected to any station outside the group.
+
+Help the city's recovery efforts by calculating the number of such disconnected power regions.
+
+Input Format
+First line: Two integers n and m — number of power stations and number of working cables.
+
+Next m lines: Each line has two integers u and v denoting a cable connecting station u and station v.
+Output Format
+A single integer — the number of disconnected power regions.
+
+Constraints
+1 <= n <= 10^5
+
+0 <= m <= 2*10^5
+
+1 <= u, v <= n
+Sample Testcase 0
+Testcase Input
+6 4
+1 2
+2 3
+4 5
+5 6
+Testcase Output
+2
+Explanation
+There are two groups of connected stations:
+
+
+
+Group 1: 1-2-3
+
+
+Group 2: 4-5-6
+
+
+
+They are disconnected from each other, so the answer is 2.
+
+Sample Testcase 1
+Testcase Input
+5 0
+Testcase Output
+5
+Explanation
+No cables work, so every station is its own region. Hence, 5 regions.
+
+
+SOLTUIONS:
+import java.util.*;
+
+public class Main {
+
+    public static int countRegions(int n, List<int[]> connections) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {  // 1-based indexing
+            adj.add(new ArrayList<>());
+        }
+
+        for (int[] edge : connections) {
+            int u = edge[0];
+            int v = edge[1];
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        boolean[] visited = new boolean[n + 1];
+        int components = 0;
+
+        for (int i = 1; i <= n; i++) {
+            if (!visited[i]) {
+                dfs(i, adj, visited);
+                components++;
+            }
+        }
+
+        return components;
+    }
+
+    private static void dfs(int node, List<List<Integer>> adj, boolean[] visited) {
+        visited[node] = true;
+        for (int neighbor : adj.get(node)) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, adj, visited);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        List<int[]> connections = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            connections.add(new int[]{u, v});
+        }
+
+        int result = countRegions(n, connections);
+        System.out.println(result);
+    }
+}
+
