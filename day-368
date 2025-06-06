@@ -1,0 +1,173 @@
+Maximize Shipping Orders in Limited Time
+Problem Statement
+You are a logistics manager at a shipping warehouse. Each day, you receive a list of shipping orders. Every order requires a certain amount of time to process and has a priority score indicating its importance.
+
+Due to limited manpower, the warehouse operates for T minutes a day. You can choose any subset of the orders to process, provided their total processing time does not exceed T.
+
+Your goal is to:
+
+Maximize the number of orders processed.
+
+If multiple combinations allow the same number of orders, choose the one with the highest total priority score.
+
+You are allowed to skip any orders.
+
+Write a program to determine the maximum number of orders that can be processed and the highest total priority among such combinations.
+
+Input Format
+The first line contains two integers n and T — the number of orders and the total available processing time.
+
+Each of the next n lines contains two integers:
+
+time_i — time required to process the i-th order
+priority_i — priority score of the i-th order
+Output Format
+The maximum number of orders that can be fulfilled
+The maximum total priority achievable among those combinations
+Constraints
+1 <= n <= 10^5  
+1 <= time_i <= 10^4  
+1 <= priority_i <= 10^4  
+1 <= T <= 10^9
+Sample Testcase 0
+Testcase Input
+5 20
+4 5
+8 3
+5 7
+2 4
+10 6
+Testcase Output
+4 19
+Explanation
+The optimal set of orders is those with processing times 2, 4, 5, and 8 minutes, which sum to 19 minutes — within the 20-minute daily limit..
+
+
+
+Total time = 2 + 4 + 5 + 8 = 19 ≤ 20
+
+
+Total priority = 4 + 5 + 7 + 3 = 19
+
+
+
+No other combination of 4 orders fits within the time limit with a higher priority, and processing 5 or more orders is impossible within 20 minutes.
+
+
+Thus, this selection maximizes the number of orders processed and, among those, achieves the highest priority sum.
+
+Sample Testcase 1
+Testcase Input
+3 15
+7 10
+8 9
+5 6
+Testcase Output
+2 19
+Explanation
+The best choice is to select orders with processing times 7 and 8 minutes, totaling exactly 15 minutes, which meets the time limit.
+
+
+You can choose orders with times 7 and 8.
+
+
+
+Total time = 15
+
+
+Priority = 10 + 9 = 19
+
+
+
+Other pairs like (7, 5) or (8, 5) fit the time but have lower total priorities (16 and 15 respectively).
+
+
+Therefore, choosing orders with times 7 and 8 maximizes both the number of orders and the total priority.
+
+  SOLTUIONS:
+  import java.util.*;
+
+class Main {
+    static class Order {
+        int time, priority;
+        public Order(int t, int p) {
+            this.time = t;
+            this.priority = p;
+        }
+    }
+
+    public static int[] max_orders(int n, int T, int[][] rawOrders) {
+        Order[] orders = new Order[n];
+        for (int i = 0; i < n; i++) {
+            orders[i] = new Order(rawOrders[i][0], rawOrders[i][1]);
+        }
+
+        int low = 0, high = n;
+        int maxOrders = 0, maxPriority = 0;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int[] result = canTakeKOrders(orders, T, mid);
+
+            if (result[0] == 1) {
+                // Valid: can take `mid` orders
+                maxOrders = mid;
+                maxPriority = result[1];
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return new int[]{maxOrders, maxPriority};
+    }
+
+    private static int[] canTakeKOrders(Order[] orders, int T, int k) {
+        if (k == 0) return new int[]{1, 0};
+
+        List<Order> filtered = new ArrayList<>();
+        for (Order o : orders) {
+            filtered.add(o);
+        }
+
+        // Sort by priority descending
+        filtered.sort((a, b) -> b.priority - a.priority);
+
+        PriorityQueue<Order> pq = new PriorityQueue<>((a, b) -> b.time - a.time);
+        int totalTime = 0;
+        int totalPriority = 0;
+
+        for (Order o : filtered) {
+            pq.offer(o);
+            totalTime += o.time;
+            totalPriority += o.priority;
+
+            if (pq.size() > k) {
+                Order removed = pq.poll();
+                totalTime -= removed.time;
+                totalPriority -= removed.priority;
+            }
+
+            if (pq.size() == k && totalTime <= T) {
+                return new int[]{1, totalPriority};
+            }
+        }
+
+        return new int[]{0, 0}; // Not possible to take k orders under time T
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int T = scanner.nextInt();
+        int[][] orders = new int[n][2];
+
+        for (int i = 0; i < n; i++) {
+            orders[i][0] = scanner.nextInt(); // time
+            orders[i][1] = scanner.nextInt(); // priority
+        }
+
+        int[] result = max_orders(n, T, orders);
+        System.out.println(result[0] + " " + result[1]);
+    }
+}
