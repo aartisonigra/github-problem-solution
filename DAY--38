@@ -1,0 +1,173 @@
+Time Rift Queries
+Problem Statement
+In a faraway dimension, a wizard maintains a timeline of arrays, where each version of the array results from updating an earlier version. Every update either inserts or changes the value at a specific position in the array. Due to his magical powers, the wizard can query across different points in the timeline.
+
+You are given an initial array A of size N. The array evolves over time via M versioned updates. Each update produces a new version of the array by changing one index to a new value.
+
+Later, the wizard wants to perform Q queries. Each query is of the form:
+
+Given a version V, a range [L, R], and a number K, 
+find the K-th smallest number in that subarray of version V.
+
+Your task is to efficiently process all updates and answer the K-th order statistics queries on historical versions of the array.
+
+Input Format
+The first line contains two integers N and M.
+
+The second line conaains N integers A[1..N] (initial array)
+
+Next M lines: Each line has three integers:
+    pos val baseVersion
+    => update A[pos] = val, creating a new version from baseVersion
+
+Next line: Integer Q
+Next Q lines: Each line has four integers:
+    V L R K => Query the K-th smallest element in A[L..R] of version V
+
+Output Format
+For each query, print the answer on a new line.
+
+Constraints
+1 ≤ N ≤ 10^3
+
+1 ≤ M ≤ 10^3
+
+1 ≤ Q ≤ 10⁵
+
+1 ≤ A[i], val ≤ 10⁹
+
+1 ≤ pos ≤ N
+
+0 ≤ baseVersion < (M+1)
+
+1 ≤ V ≤ (M+1)
+
+1 ≤ L ≤ R ≤ N
+
+1 ≤ K ≤ (R − L + 1)
+
+Version 0 refers to the original array. Every update creates a new version.
+
+Sample Testcase 0
+Testcase Input
+6 2
+4 1 6 3 9 2
+2 5 0
+6 0 1
+3
+0 1 6 3
+1 1 4 2
+2 3 6 4
+Testcase Output
+3
+4
+9
+Explanation
+Version 0: Original array [4,1,6,3,9,2]
+Query: 3rd smallest between index 1 and 6 → sorted [1,2,3,4,6,9] → answer is 3.
+
+
+Version 1: Update index 2 to 5 → [4,5,6,3,9,2]
+Query: 2nd smallest between index 1 and 4 → sorted [3,4,5,6] → answer is 4.
+
+
+Version 2: Update index 6 to 0 → [4,5,6,3,9,0]
+Query: 4th smallest between index 3 and 6 → sorted [0,3,6,9] → answer is 6.
+
+Sample Testcase 1
+Testcase Input
+5 3
+1 5 2 4 3
+3 6 0
+2 7 1
+4 1 2
+2
+3 1 5 3
+1 2 4 2
+Testcase Output
+3
+5
+Explanation
+Version 0: [1, 5, 2, 4, 3]
+Version 1: Modify index 3 to 6 → [1, 5, 6, 4, 3]
+Version 2: Modify index 2 to 7 → [1, 7, 6, 4, 3]
+Version 3: Modify index 4 to 1 → [1, 7, 6, 1, 3]
+
+
+Now,
+Query 1 (V = 3, L = 1, R = 5, K = 3):
+Array = [1, 7, 6, 1, 3] → Sorted = [1, 1, 3, 6, 7] → 3rd smallest = 3
+
+
+Query 2 (V = 1, L = 2, R = 4, K = 2):
+Array = [5, 6, 4] → Sorted = [4, 5, 6] → 2nd smallest = 5
+
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void solveTimeRiftQueries(int N, int M, int[] A, int[][] updates, int Q, int[][] queries) {
+        // Store all versions
+        List<int[]> versions = new ArrayList<>();
+        versions.add(A.clone());  // Version 0
+
+        // Build all versions
+        for (int i = 0; i < M; i++) {
+            int pos = updates[i][0] - 1; // Convert to 0-based
+            int val = updates[i][1];
+            int baseVersion = updates[i][2];
+
+            int[] newVersion = versions.get(baseVersion).clone();
+            newVersion[pos] = val;
+            versions.add(newVersion);
+        }
+
+        // Answer queries
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Q; i++) {
+            int V = queries[i][0];
+            int L = queries[i][1] - 1; // 0-based
+            int R = queries[i][2] - 1;
+            int K = queries[i][3];
+
+            int[] versionArr = versions.get(V);
+            int[] sub = Arrays.copyOfRange(versionArr, L, R + 1);
+            Arrays.sort(sub);
+
+            sb.append(sub[K - 1]).append("\n");
+        }
+
+        System.out.print(sb.toString());
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int M = scanner.nextInt();
+
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            A[i] = scanner.nextInt();
+        }
+
+        int[][] updates = new int[M][3];
+        for (int i = 0; i < M; i++) {
+            updates[i][0] = scanner.nextInt();
+            updates[i][1] = scanner.nextInt();
+            updates[i][2] = scanner.nextInt();
+        }
+
+        int Q = scanner.nextInt();
+        int[][] queries = new int[Q][4];
+        for (int i = 0; i < Q; i++) {
+            queries[i][0] = scanner.nextInt();
+            queries[i][1] = scanner.nextInt();
+            queries[i][2] = scanner.nextInt();
+            queries[i][3] = scanner.nextInt();
+        }
+
+        solveTimeRiftQueries(N, M, A, updates, Q, queries);
+    }
+}
