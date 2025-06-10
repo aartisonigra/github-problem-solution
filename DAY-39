@@ -1,0 +1,105 @@
+Employee money transfer system
+Problem Statement
+A startup company is responsible for managing salary payments to its employees from its bank account. Each employee has a designated salary, and the company needs to verify if it can pay these salaries sequentially based on the current balance in its account.
+Your task is to assess whether the company can disburse each employee's salary in the given order while updating the balance accordingly. If a payment can be made, the balance should be decreased by the salary amount; if it cannot be paid, the company should return false for that employee, and the balance will remain unchanged.
+
+Input Format
+The first line of input contains an integer value N representing the amount of money in the company's bank account.
+The second line contains an integer M, which indicates the number of employees.
+The third line features an array of employee names as strings, separated by spaces.
+The fourth line contains an array of M integers representing the salary for each employee, separated by spaces.
+
+Output Format
+Output a series of true or false values corresponding to each employee, indicating whether the salary for that employee can be paid:
+
+true if the salary can be paid.
+false if the salary cannot be paid.
+Each value should be separated by spaces.
+
+Constraints
+0<= N < 10^6
+1< M < 10^2
+
+Sample Testcase 0
+Testcase Input
+100000
+3
+employee1 employee2 employee3 
+50000 50000 60000
+Testcase Output
+true true false
+Explanation
+For employee1, the salary is 50000, which is less than the initial balance of 100000. The balance is updated to 50000 after paying the salary, and the output is true.
+
+
+For employee2, the salary is 50000, which is less than the updated balance of 50000. The balance is updated to 0 after paying the salary, and the output is true.
+
+
+For employee3, the salary is 60000, which is more than the updated balance of 0. Therefore, the output is false.
+
+Sample Testcase 1
+Testcase Input
+50000
+5
+employee1 employee2 employee3 employee4 employee5
+54000 10000 60000 20000 5000
+Testcase Output
+false true false true true
+Explanation
+For employee1, the salary is 54000, which is more than the initial balance of 50000. Therefore, the output is false.
+
+
+For employee2, the salary is 10000, which is less than the current balance of 50000. The balance is updated to 40000 after paying the salary, and the output is true.
+
+
+For employee3, the salary is 60000, which is more than the updated balance of 40000. Therefore, the output is false.
+
+
+For employee4, the salary is 20000, which is less than the updated balance of 40000. The balance is updated to 20000 after paying the salary, and the output is true.
+
+
+For employee5, the salary is 5000, which is less than the updated balance of 20000. The balance is updated to 15000 after paying the salary, and the output is true.
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+
+    public static List<Boolean> canPaySalaries(int companyMoney, List<String> employeeNames, List<Integer> employeeSalaries) {
+        List<Boolean> result = new ArrayList<>();
+
+        for (int i = 0; i < employeeSalaries.size(); i++) {
+            int salary = employeeSalaries.get(i);
+            if (companyMoney >= salary) {
+                result.add(true);
+                companyMoney -= salary; // salary paid
+            } else {
+                result.add(false); // not enough money, salary not paid
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int companyMoney = sc.nextInt();   // Total money in the account
+        int employeeCount = sc.nextInt();  // Number of employees
+        sc.nextLine(); // consume newline
+
+        List<String> employeeNames = Arrays.asList(sc.nextLine().split(" "));
+
+        List<Integer> employeeSalaries = new ArrayList<>();
+        for (String s : sc.nextLine().split(" ")) {
+            employeeSalaries.add(Integer.parseInt(s));
+        }
+
+        List<Boolean> result = canPaySalaries(companyMoney, employeeNames, employeeSalaries);
+
+        for (Boolean b : result) {
+            System.out.print(b + " ");
+        }
+    }
+}
