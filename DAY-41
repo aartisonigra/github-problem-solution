@@ -1,0 +1,149 @@
+Problem Statement
+You are given an array A of N integers. A subarray is called balanced if the frequency of every unique number in the subarray is the same.
+
+Your task is to find the length of the longest contiguous subarray which is balanced in frequency.
+
+Input Format
+First line contains a single integer N — the size of the array.
+
+Second line contains N space-separated integers representing array A.
+
+Output Format
+Print a single integer — the length of the longest balanced frequency subarray
+
+Constraints
+1≤N≤2×10^5
+
+1≤A[i]≤10^5
+
+Sample Testcase 0
+Testcase Input
+8
+1 1 2 2 3 3 3 3
+Testcase Output
+6
+Explanation
+The subarray [2, 2, 3, 3, 3, 3] has:
+
+
+
+2 → 2 times
+
+
+3 → 4 times
+ Not balanced.
+
+
+
+But [1, 1, 2, 2, 3, 3] → each appears twice → Accepted
+
+Sample Testcase 1
+Testcase Input
+6
+1 2 2 1 3 3
+Testcase Output
+6
+Explanation
+All elements appear exactly twice:
+
+
+
+1 → 2 times
+
+2 → 2 times
+
+3 → 2 times → This is a fully balanced array.
+
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+
+    public static int longestBalancedFrequencySubarray(int[] arr) {
+        int maxLength = 0;
+        Map<Integer, Integer> countMap = new HashMap<>(); // number → count
+        Map<Integer, Integer> freqMap = new HashMap<>();  // frequency → how many numbers have this frequency
+
+        int left = 0;
+
+        for (int right = 0; right < arr.length; right++) {
+            int num = arr[right];
+
+            // Remove old frequency of num from freqMap
+            int oldFreq = countMap.getOrDefault(num, 0);
+            if (oldFreq > 0) {
+                freqMap.put(oldFreq, freqMap.get(oldFreq) - 1);
+                if (freqMap.get(oldFreq) == 0) {
+                    freqMap.remove(oldFreq);
+                }
+            }
+
+            // Add new frequency
+            int newFreq = oldFreq + 1;
+            countMap.put(num, newFreq);
+            freqMap.put(newFreq, freqMap.getOrDefault(newFreq, 0) + 1);
+
+            // Shrink window if it’s invalid
+            while (!isValid(freqMap)) {
+                int removeNum = arr[left];
+                int removeFreq = countMap.get(removeNum);
+
+                // Update freqMap
+                freqMap.put(removeFreq, freqMap.get(removeFreq) - 1);
+                if (freqMap.get(removeFreq) == 0) {
+                    freqMap.remove(removeFreq);
+                }
+
+                countMap.put(removeNum, removeFreq - 1);
+                if (removeFreq - 1 > 0) {
+                    freqMap.put(removeFreq - 1, freqMap.getOrDefault(removeFreq - 1, 0) + 1);
+                } else {
+                    countMap.remove(removeNum);
+                }
+
+                left++;
+            }
+
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+
+    private static boolean isValid(Map<Integer, Integer> freqMap) {
+        if (freqMap.size() == 1) return true;
+
+        if (freqMap.size() == 2) {
+            List<Integer> keys = new ArrayList<>(freqMap.keySet());
+            int f1 = keys.get(0), f2 = keys.get(1);
+            int c1 = freqMap.get(f1), c2 = freqMap.get(f2);
+
+            // Case 1: one freq = 1 and count = 1 (e.g. {1:1, 2:3})
+            if ((f1 == 1 && c1 == 1) || (f2 == 1 && c2 == 1)) return true;
+
+            // Case 2: freq difference = 1 and higher freq appears only once (e.g. {2:3, 3:1})
+            if (Math.abs(f1 - f2) == 1) {
+                if ((f1 > f2 && c1 == 1) || (f2 > f1 && c2 == 1)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt(); // Read the size of the array
+
+        int[] arr = new int[n];
+        for (int i = 0; i < n; ++i) {
+            arr[i] = scanner.nextInt(); // Read the array elements
+        }
+
+        int result = longestBalancedFrequencySubarray(arr);
+        System.out.println(result);
+
+        scanner.close();
+    }
+}
