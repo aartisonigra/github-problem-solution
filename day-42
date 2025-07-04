@@ -1,0 +1,143 @@
+Secret Council Codes
+Problem Statement
+In the kingdom of Cipheria, secret councils operate in isolated groups. Each council consists of agents, and every agent holds a numeric code (non-negative integer). Councils only trust agents that can establish communication chains through direct trust links. These trust links are bidirectional.
+
+Interestingly, the kingdom’s Grand Oracle wants to find out how many unique XOR values can be obtained from each council by XOR-ing all possible subsets of their members' code values (including the empty subset which results in 0).
+
+You are given the number of agents, their respective code values, and a list of trust links. Agents connected directly or indirectly (through chains) form a council.
+
+Your task is to output the number of distinct XOR values obtainable for each council. Return the sum of these counts across all councils.
+
+Input Format
+First line: Two integers n and m — number of agents and number of trust links.
+
+Second line: n integers — the code value of each agent.
+
+Next m lines: Each line has two integers u and v indicating a trust link between agent u and agent v (1-based indexing).
+Output Format
+A single integer: the sum of all unique subset XOR values possible across all councils.
+
+Constraints
+1 ≤ n ≤ 10^5
+
+0 ≤ code[i] < 2^20
+
+0 ≤ m ≤ 2 × 10^5
+
+1 ≤ u, v ≤ n
+
+No self-loops or duplicate edges.
+Sample Testcase 0
+Testcase Input
+6 4
+7 3 5 6 1 2
+1 2
+2 3
+4 5
+5 6
+Testcase Output
+16
+Explanation
+
+Council 1 ([7,3,5]) has XOR basis size 3 → 8 distinct XOR values.
+
+Council 2 ([6,1,2]) also has XOR basis size 3 → 8 distinct XOR values.
+
+Total distinct XORs = 8 + 8 = 16.
+
+Sample Testcase 1
+Testcase Input
+5 3  
+1 2 3 4 5  
+1 2  
+2 3  
+4 5  
+Testcase Output
+8
+Explanation
+
+Council 1 (agents 1,2,3 with codes [1,2,3]) produces 4 distinct XOR values: {0,1,2,3}.
+
+Council 2 (agents 4,5 with codes [4,5]) produces 4 distinct XOR values: {0,1,4,5}.
+
+Sum of distinct XOR counts = 4 + 4 = 8.
+
+Total distinct XORs = 4 + 2 = 8
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+
+    public static int calculateUniqueSubsetXOR(int n, int m, int[] codes, List<int[]> edges) {
+        // Step 1: Build adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; ++i) graph.add(new ArrayList<>());
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1];
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+
+        boolean[] visited = new boolean[n];
+        int totalXORs = 0;
+
+        // Step 2: Process each connected component
+        for (int i = 0; i < n; ++i) {
+            if (!visited[i]) {
+                List<Integer> componentCodes = new ArrayList<>();
+                dfs(i, graph, visited, codes, componentCodes);
+
+                // Step 3: Compute XOR basis for this component
+                List<Integer> basis = new ArrayList<>();
+                for (int code : componentCodes) {
+                    insertIntoBasis(basis, code);
+                }
+
+                // Step 4: Number of subset XORs = 2^(basis size)
+                totalXORs += 1 << basis.size();
+            }
+        }
+
+        return totalXORs;
+    }
+
+    private static void dfs(int node, List<List<Integer>> graph, boolean[] visited, int[] codes, List<Integer> componentCodes) {
+        visited[node] = true;
+        componentCodes.add(codes[node]);
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited, codes, componentCodes);
+            }
+        }
+    }
+
+    private static void insertIntoBasis(List<Integer> basis, int num) {
+        for (int b : basis) {
+            num = Math.min(num, num ^ b);
+        }
+        if (num != 0) basis.add(num);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        int[] codes = new int[n];
+        for (int i = 0; i < n; ++i) {
+            codes[i] = scanner.nextInt();
+        }
+
+        List<int[]> edges = new ArrayList<>();
+        for (int i = 0; i < m; ++i) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            edges.add(new int[] {u - 1, v - 1}); // Convert to 0-based index
+        }
+
+        int result = calculateUniqueSubsetXOR(n, m, codes, edges);
+        System.out.println(result);
+    }
+}
