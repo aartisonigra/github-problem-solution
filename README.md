@@ -69,3 +69,5 @@ https://unstop.com/code/practice/491699
 |2025-07-02 | (https://unstop.com/code/practice/569982)
 
 |2025-07-04 | (https://unstop.com/code/practice/570278)
+
+|2025-07-05 | (https://unstop.com/code/practice/292350)
