@@ -1,0 +1,106 @@
+Prime matrix problem
+Problem Statement
+You are given a matrix M of size N*N of positive integers, if the element is found to be a prime number mark it as -1 as well as the complete row and column in which the element is present as -1. At last print the modified matrix.
+
+Note: While printing give a single space between the elements in the same row.
+
+The next row starts on the next line.
+
+Input Format
+The first line of input represents the size of matrix N
+Following N lines display the element of the matrix
+
+Output Format
+Print modified matrix with given conditions.
+
+Constraints
+1 <= N <= 10^3
+0 <= M[i][j] <= 10^4
+
+Sample Testcase 0
+Testcase Input
+2
+10 10
+25 11
+Testcase Output
+10 -1 
+-1 -1
+Explanation
+The prime no in given matrix is 11, and the rows and columns associated to it are marked as -1.
+
+Sample Testcase 1
+Testcase Input
+3
+1 2 3
+4 5 6
+7 8 9
+Testcase Output
+-1 -1 -1 
+-1 -1 -1 
+-1 -1 -1
+Explanation
+The prime numbers in the given matrix are 2, 3, 5 and 7. As 2 is in the first row and second column, we mark all the elements in the first row and second column as -1. Similarly, we mark all the elements in the third row and first column as -1. So, the final matrix looks like above.
+
+
+
+SOLUTIONS:
+
+  import java.util.*;
+
+public class Main {
+
+    // Prime check function
+    public static boolean isPrime(int num) {
+        if (num < 2) return false;
+        if (num == 2 || num == 3) return true;
+        if (num % 2 == 0 || num % 3 == 0) return false;
+        for (int i = 5; i * i <= num; i += 6) {
+            if (num % i == 0 || num % (i + 2) == 0) return false;
+        }
+        return true;
+    }
+
+    public static void primeMatrix(int n, int[][] matrix) {
+        boolean[] markRow = new boolean[n];
+        boolean[] markCol = new boolean[n];
+
+        // Step 1: Identify all rows and columns with primes
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (isPrime(matrix[i][j])) {
+                    markRow[i] = true;
+                    markCol[j] = true;
+                }
+            }
+        }
+
+        // Step 2: Mark required rows and columns as -1
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (markRow[i] || markCol[j]) {
+                    matrix[i][j] = -1;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int[][] matrix = new int[n][n];
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+
+        primeMatrix(n, matrix);
+
+        for (int[] row : matrix) {
+            for (int elem : row) {
+                System.out.print(elem + " ");
+            }
+            System.out.println();
+        }
+    }
+}
