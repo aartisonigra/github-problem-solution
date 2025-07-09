@@ -1,0 +1,83 @@
+Max K Subarrays
+Problem Statement
+You are given an array of size N. Now your teacher challenged you to generate all continuous subarrays and calculate their individual sums and asked you to return the sum of only K subarrays whose individuals sum are maximum.
+
+Input Format
+First Line contains two space-seperated integers N and K representing size of array and number of subarrays sum you have to return.
+
+Second line contains N space-seperated integers representing elements of the array.
+
+Output Format
+A single integer representing sum of K subarrays having maximum sums.
+
+Constraints
+1 <= N, K <= 10^5.
+
+0 <= A[i] <= 10^5.
+
+Sample Testcase 0
+Testcase Input
+3 3
+1 2 3
+Testcase Output
+14
+Explanation
+Array is [1, 2, 3]
+All continuous subarrays of the given array are [1], [2], [3], [1,2], [2,3], [1,2,3]
+Individual sums of all the continuous subarrays are 1,2,3,3,5,6
+The top 3 sums are 6,5 and 3.
+Therefore, the answer is 6+5+3 = 14.
+Sample Testcase 1
+Testcase Input
+3 2
+5 2 6
+Testcase Output
+21
+Explanation
+Array is [5, 2, 6]
+All continuous subarrays of the given array are [5], [2], [6], [5,2], [2,6], [5,2,6]
+Individual sums of all the continuous subarrays are 5,2,6,7,8,13
+The top 2 max sums are 13 and 8.
+Therefore, the answer is 13+8 = 21.
+
+
+SOLUTIONS:
+import java.util.*;
+
+public class Main {
+
+    public static int findMaxKSubarraySums(int n, int k, int[] arr) {
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += arr[j];
+                maxHeap.add(sum);
+            }
+        }
+
+        int total = 0;
+        while (k-- > 0 && !maxHeap.isEmpty()) {
+            total += maxHeap.poll();
+        }
+
+        return total;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();  // First input is the integer N
+        int k = scanner.nextInt();  // Second input is the integer K
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        scanner.close();
+        
+        // Call user logic function and print the output
+        int result = findMaxKSubarraySums(n, k, arr);
+        System.out.println(result);
+    }
+}
+
