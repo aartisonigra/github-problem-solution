@@ -1,0 +1,64 @@
+Colorful boxes
+Problem Statement
+Alice's room is filled with a set of colorful boxes, and inside each box is a word. To win her unique game, you must carefully open each box, and turn the word inside upside down, but remember, the order of the boxes must remain the same.
+
+Can you assist Alice in achieving victory by mastering this task of reversing the words in her collection of boxes?
+
+Input Format
+The first line of input data contains a string s which contains the words in the boxes separated by a space.
+
+Note: The ith word in string s denotes the word in the ith box. 
+
+Output Format
+The output contains a string that has the words in each box in reversed order. 
+
+Constraints
+1<=s.length<=5*10^4
+
+s does not contain any leading or trailing spaces.
+
+Sample Testcase 0
+Testcase Input
+Good Job
+Testcase Output
+dooG boJ
+Explanation
+In this sample test case “Good Job" word Good is reversed to “dooG” and “Job” is reversed to “boJ” but the relative order remained same.
+
+Sample Testcase 1
+Testcase Input
+Let's learn
+Testcase Output
+s'teL nrael
+Explanation
+The words "Let's" and "learn" are reversed to "s'teL" and "nrael" and added in the same order to the new string. 
+
+
+SOLTUIONS:
+import java.util.Scanner;
+
+public class Main {
+    public static String reverseWords(String s) {
+        String[] words = s.split(" ");
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            StringBuilder reversed = new StringBuilder(words[i]).reverse();
+            result.append(reversed);
+
+            if (i < words.length - 1) {
+                result.append(" ");
+            }
+        }
+
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine().trim();
+        String result = reverseWords(s);
+        System.out.println(result);
+    }
+}
+
