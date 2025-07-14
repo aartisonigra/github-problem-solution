@@ -1,0 +1,79 @@
+Mocha’s Alien dictionary
+Problem Statement
+John and Mocha are two friends. Mocha made his dictionary of length N with strings K1, K2 .. Kn and called it Alien dictionary. John tries to test Mocha's Alien dictionary by giving one string S to Mocha. Help Mocha check if John's string can be segmented into a sequence of one or more words from Mocha's Alien dictionary.
+Note: The words in the dictionary contain unique words of lowercase English letters and can be found multiple times in the segmentation.
+
+Input Format
+The first line contains a string S given by John.
+The second line contains N, which is the length of the dictionary of strings of Mocha.
+The following N lines are different strings that are present in the Mocha's Alien dictionary.
+
+Output Format
+Print "true" if the string given by John can be segmented into a sequence of one or more words of Mocha's Alien dictionary.
+Else, print "false".
+
+Constraints
+1 <= S.length() <= 3*10^2
+1<= N <= 10^3
+1 <= Ki.length() <= 20
+
+Sample Testcase 0
+Testcase Input
+applepenapple
+2
+apple
+pen
+Testcase Output
+true
+Explanation
+In the first sample test case, we can make “applepenapple” using the string “apple” and “pen” by concatenation of the strings “apple”+”pen”+”apple”. So print true for this test case.
+Sample Testcase 1
+Testcase Input
+catsandog
+5
+cats
+dog
+sand
+and
+cat
+Testcase Output
+false
+Explanation
+Although we can form the prefix "cats" + "and", the remaining "og" cannot be formed using the dictionary words. Hence, segmentation is not possible.so false
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        int n = Integer.parseInt(scanner.nextLine());
+        List<String> wordDict = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            wordDict.add(scanner.nextLine());
+        }
+
+        System.out.println(wordBreak(s, wordDict));
+    }
+
+    public static String wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict);
+        int len = s.length();
+        boolean[] dp = new boolean[len + 1];
+        dp[0] = true; // empty string is segmentable
+
+        for (int i = 1; i <= len; i++) {
+            for (int j = 0; j < i; j++) {
+                String sub = s.substring(j, i);
+                if (dp[j] && wordSet.contains(sub)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[len] ? "true" : "false";
+    }
+}
