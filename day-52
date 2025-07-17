@@ -1,0 +1,116 @@
+Image Processing
+Problem Statement
+You have an image represented by an M x N matrix, where each point in the image is represented by a color in the matrix.
+
+Your task is to start from a given spot (sr, sc) and a specified color (let's call it X). You need to color all connected points in the image by moving up, down, left, or right from the starting point. The color of all these connected points should be changed to the new color X.
+
+Please note that the path to each point must have the same color as the initial color of the starting point. Once this task is completed, display the updated image represented by the matrix.
+
+Input Format
+The first line of the input contains 2 integers M and N.
+
+Next M lines contains N space-separated integers denoting the matrix. 
+
+The next 3 lines contain sr, sc and color (X).
+
+Output Format
+The output contains the updated M x N matrix (representing the image)
+
+Constraints
+1<=N, M<=1000
+
+0<=sr<=m
+
+0<=sc<=n
+
+0<=image[i][j],color<=3000
+
+Sample Testcase 0
+Testcase Input
+3 5
+1 2 1 1 1
+2 3 1 2 2
+1 2 1 3 1
+0
+0
+5
+Testcase Output
+5 2 1 1 1 
+2 3 1 2 2 
+1 2 1 3 1 
+Explanation
+The starting point is (0,2) and therefore all the points that area reachable by moving down, up, left and right with value 1 are updated to value 5 (new color).
+
+Sample Testcase 1
+Testcase Input
+2 3
+0 0 0
+0 0 0
+0
+0
+2
+Testcase Output
+2 2 2 
+2 2 2 
+Explanation
+As mentioned in the problem statement from the starting cell number all adjacent cells with the same colour value as 0 are coloured in colour 2.
+
+
+
+   SOLUTIONS:
+
+
+ import java.util.*;
+
+public class Main {
+
+    // DFS-based flood fill function
+    public static void floodFill(int[][] image, int sr, int sc, int newColor) {
+        int oldColor = image[sr][sc];
+        if (oldColor == newColor) return;  // No need to fill if color is same
+
+        dfs(image, sr, sc, oldColor, newColor);
+    }
+
+    // Helper DFS function
+    public static void dfs(int[][] image, int i, int j, int oldColor, int newColor) {
+        int m = image.length;
+        int n = image[0].length;
+
+        // Out of bounds or not matching old color
+        if (i < 0 || i >= m || j < 0 || j >= n || image[i][j] != oldColor) return;
+
+        image[i][j] = newColor;
+
+        dfs(image, i + 1, j, oldColor, newColor); // down
+        dfs(image, i - 1, j, oldColor, newColor); // up
+        dfs(image, i, j + 1, oldColor, newColor); // right
+        dfs(image, i, j - 1, oldColor, newColor); // left
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int M = scanner.nextInt();
+        int N = scanner.nextInt();
+        int[][] image = new int[M][N];
+
+        for (int i = 0; i < M; i++)
+            for (int j = 0; j < N; j++)
+                image[i][j] = scanner.nextInt();
+
+        int sr = scanner.nextInt(); // starting row
+        int sc = scanner.nextInt(); // starting col
+        int color = scanner.nextInt(); // new color
+
+        floodFill(image, sr, sc, color);
+
+        // Print the modified image
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++)
+                System.out.print(image[i][j] + " ");
+            System.out.println();
+        }
+    }
+}
+                                                                       
