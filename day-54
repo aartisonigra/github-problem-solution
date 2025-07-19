@@ -1,0 +1,80 @@
+Treasure in a Mystery Box
+Problem Statement
+You embark on an adventure to explore a mysterious box that contains N enchanted compartments leading to a treasure. At each move, you can choose to open either 1 or 2 compartments.
+
+Your mission is to determine the total number of distinct ways to reach the Nth compartment of this mysterious box.
+
+Input Format
+The first line contain a single integer N representing number of enchanted compartments
+
+Output Format
+Print a single integer that denotes the total count of distinct ways to reach the Nth compartment of this enigmatic box.
+
+Constraints
+1 <= N <= 45
+
+Sample Testcase 0
+Testcase Input
+4
+Testcase Output
+5
+Explanation
+There are five ways to climb to the top.
+
+
+1. 1 compartment + 1 compartment + 1 compartment + 1 compartment or as [1,1,1,1]
+2. [1,1,2]
+3. [1,2,1]
+4. [2,1,1]
+5. [2,2]
+
+
+
+ 
+
+Sample Testcase 1
+Testcase Input
+5
+Testcase Output
+8
+Explanation
+There are eight ways to climb to the top.
+
+
+1. 1 compartment + 1 compartment + 1 compartment + 1 compartment + 1 compartment or as [1,1,1,1,1]
+2. [1,1,1,2]
+3. [2,1,1,1]
+4. [1,2,1,1]
+5. [1,1,2,1]
+6. [2,2,1]
+7. [2,1,2]
+8. [1,2,2]
+
+
+  SOLTUIONS:
+
+import java.util.Scanner;
+
+public class Main {
+    public static int get_treasure(int n) {
+        if (n <= 2) return n;
+
+        int a = 1; // ways to reach 1
+        int b = 2; // ways to reach 2
+        int ways = 0;
+
+        for (int i = 3; i <= n; i++) {
+            ways = a + b;
+            a = b;
+            b = ways;
+        }
+        return ways;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int result = get_treasure(n);
+        System.out.println(result);
+    }
+}
