@@ -1,0 +1,63 @@
+Double Array
+Problem Statement
+Ram is given a sequence of numbers by the wizard Betaal. To free himself from the wizard's spell, Ram must sort this sequence and then concatenate the sorted sequence with itself.
+
+Your task is to help Ram by performing the required operations and generating the final sequence.
+
+Input Format
+The first line contains an integer N, representing the number of elements.
+
+The second line contains N space separated integers a1,a2,a3….an.
+
+Output Format
+The output is a sequence that consists of the sorted sequence concatenated with itself, as described in the problem.
+
+Constraints
+1 <= N <= 10^6
+
+1 <= Ai <=10^6
+
+Sample Testcase 0
+Testcase Input
+3
+1 2 1
+Testcase Output
+1 1 2 1 1 2 
+Explanation
+In the sample case we have first sorted the sequence 1 2 1 -> 1 1 2 and then concatenated that with itself.
+Sample Testcase 1
+Testcase Input
+4
+1 2 2 3 
+Testcase Output
+1 2 2 3 1 2 2 3 
+Explanation
+In the sample case we have first sorted the sequence 1 2 2 3 -> 1 2 2 3 and then concatenated that with itself.
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Step 1: Input
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        // Step 2: Sort the array
+        Arrays.sort(arr);
+
+        // Step 3: Print the array twice (concatenated with itself)
+        for (int i = 0; i < 2; i++) { // run loop twice
+            for (int j = 0; j < n; j++) {
+                System.out.print(arr[j] + " ");
+            }
+        }
+    }
+}
