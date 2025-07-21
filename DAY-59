@@ -1,0 +1,108 @@
+Columns Removable
+Problem Statement
+Dhrutik is given N strips consists of lowercase English letters and each containing a string of same length. The strings are arranged in the order of occurrence like a grid. 
+
+For example the strips s= ["ghe", "mek", "xfn"] is structured as follows:
+
+ghe (strip 1)
+mek (strip 2)
+xfn (strip 3)
+Now, Dhrutik wish to get rid of the columns that aren't alphabetically sorted. In this example, he will remove column 1 (hef as it is not sorted).
+
+You should help Dhrutik solve the problem by deleting columns. Return the total number of columns you'll be deleting.
+
+Input Format
+The first line of the input contains a integer N and M denoting the number of strips present and length of the string. 
+
+The next N line contains the string on ith strip.
+
+Output Format
+Print the number of deleted columns.
+
+Constraints
+1 <= number of strips <= 10^4
+
+1 <= string.length <= 10^3
+
+Sample Testcase 0
+Testcase Input
+3 2
+ab
+ce
+gf
+Testcase Output
+0
+Explanation
+The grid looks as follows: 
+
+
+a b
+
+
+c e
+
+
+g f
+
+
+Because Column 0 and 1 are sorted so no columns are deleted. 
+
+Sample Testcase 1
+Testcase Input
+3 3
+abc
+cef
+dcj
+Testcase Output
+1
+Explanation
+The grid looks as follows:
+
+
+a b c
+
+
+c e f
+
+
+d c j
+
+
+Columns 0 and 2 are sorted, but column 1 is not, so just one column needs to be deleted.
+
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static int user_logic(int n, int m, String[] strs) {
+        int count = 0;
+
+        for (int col = 0; col < m; col++) {
+            for (int row = 0; row < n - 1; row++) {
+                if (strs[row].charAt(col) > strs[row + 1].charAt(col)) {
+                    count++;
+                    break; // No need to check further in this column
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        String[] strs = new String[n];
+        for (int i = 0; i < n; i++) {
+            strs[i] = scanner.nextLine();
+        }
+
+        System.out.println(user_logic(n, m, strs));
+    }
+}
