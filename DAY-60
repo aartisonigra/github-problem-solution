@@ -1,0 +1,74 @@
+Total Theorems
+Problem Statement
+Larry is reading a math book for his class test, which contains ‘N’ chapters.
+
+In each of its chapters, there are ‘Ai’ theorems in it. He wants to mark the number of theorems he has to learn until the ith chapter ends.
+
+Your task is to help him calculate the number of theorems till every ith chapter.
+
+Input Format
+The first line of input consists of the integer N representing the number of chapters.
+
+The second line consists of N integers similar to A1, A2, A3, . . . , An. Representing the number of formulas in ith chapter.
+
+ 
+
+Output Format
+Display the running sum of number of theorems till Ith chapter.
+
+Constraints
+1 <= N <= 10^5
+
+0<= Ai <= 10^3
+
+Sample Testcase 0
+Testcase Input
+5
+2 1 3 4 5
+
+
+Testcase Output
+2 3 6 10 15
+
+Explanation
+Running sum of theorems is obtained as follows: [2, 2+1, 2+1+3, 2+1+3+4, 2+1+3+4+5] = [2, 3, 6, 10, 15]
+
+Sample Testcase 1
+Testcase Input
+3
+2 2 3
+Testcase Output
+2 4 7
+
+Explanation
+Running sum of number of theorems till ith chapter is obtained as follows: [2, 2+2, 2+2+3] = [2, 4, 7]
+
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Step 1: Read number of chapters
+        int n = sc.nextInt();
+
+        // Step 2: Read all theorem counts
+        int[] A = new int[n];
+        for (int i = 0; i < n; i++) {
+            A[i] = sc.nextInt();
+        }
+
+        // Step 3: Compute and print running sum
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += A[i];
+            System.out.print(sum);
+            if (i != n - 1) {
+                System.out.print(" ");
+            }
+        }
+    }
+}
