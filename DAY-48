@@ -1,0 +1,66 @@
+maximum balanced strings
+Problem Statement
+Balanced strings are those that have an equal quantity of 'L' and 'R' characters.
+
+Given a balanced string S, split it in the maximum amount of balanced strings and encapsulate them in ‘(’ and ‘)’. For example RRLL is balanced so you have to return “(RRLL)”.
+
+Return the string such that maximum amount of balanced encapsulated strings are there.
+
+Input Format
+The input is a single line containing the balanced string S.
+
+Output Format
+ Return the modified string such that maximum amount of balanced encapsulated strings are there.
+
+Constraints
+0 < S.length <= 2*10^6
+
+Sample Testcase 0
+Testcase Input
+RLLLLRRRLR
+
+Testcase Output
+(RL)(LLLRRR)(LR)
+
+Explanation
+S can be split into "RL", "LLLRRR", "LR", each substring contains same number of 'L' and 'R'.
+
+Sample Testcase 1
+Testcase Input
+RLRRLLRLRL
+
+Testcase Output
+(RL)(RRLL)(RL)(RL)
+Explanation
+S can be split into "RL", "RRLL", "RL", "RL", each substring contains same number of 'L' and 'R'.
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String S = sc.nextLine();
+
+        StringBuilder result = new StringBuilder();
+        int count = 0;
+        StringBuilder current = new StringBuilder();
+
+        for (char c : S.toCharArray()) {
+            current.append(c);
+            if (c == 'R') {
+                count++;
+            } else if (c == 'L') {
+                count--;
+            }
+
+            if (count == 0) {
+                result.append('(').append(current).append(')');
+                current.setLength(0); // reset current builder
+            }
+        }
+
+        System.out.println(result.toString());
+    }
+}
