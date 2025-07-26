@@ -1,0 +1,115 @@
+Recent Submissions
+Problem Statement
+Steve is participating in competitive coding.
+
+Whenever he makes a submission at time 't', any submission made exactly 5000 seconds before 't' is removed from the queue.
+Given N submissions, where each submission is associated with a distinct time 't', determine the maximum size of the submission queue at any point in time after all 'N submissions.
+
+Note: It is guaranteed that every submission uses a strictly larger value of ‘t’ than the previous submission.
+
+ 
+
+Input Format
+The first line of input contains an integer N representing the size of array which is number of submissions.
+
+The second line contains N space separated integers representing the array arr which contains the timestamps of each submission.
+
+Output Format
+Print an integer in a single line containing the maximum size possible.
+
+Constraints
+1 <= N <= 10^5
+
+1 <= arr[i] <= 10^8
+
+ 
+
+Sample Testcase 0
+Testcase Input
+3 
+300 6000 100000
+Testcase Output
+1
+Explanation
+Steve makes 3 submissions at the following times: 300, 6000, and 100000 seconds. In this scenario, each submission at time 't' results in the removal of the previous submission made exactly 5000 seconds before 't'.
+
+
+After all submissions:
+
+
+      At time 300, the queue contains submissions: [300]. Size of queue: 1.
+
+
+      At time 6000, the submission made at time 300 (which was 5000 seconds before this submission) is removed. Queue now: [6000]. Size of queue: 1.
+
+
+      At time 100000, the submission made at time 6000 (which was 5000 seconds before this submission) is removed. Queue now: [100000]. Size of queue: 1.
+
+
+Therefore, the maximum size of the submission queue observed at any point after all submissions is 1.
+
+Sample Testcase 1
+Testcase Input
+4
+1 100 5000 5002
+Testcase Output
+3
+Explanation
+
+
+
+
+Steve makes 4 submissions at the following times: 1, 100, 5000, and 5002 seconds. The submission queue behaves such that whenever a submission is made at time 't', any submission made exactly 5000 seconds before 't' is removed from the queue.
+
+
+After all submissions:
+
+
+      At time 1, the queue contains submissions: [1]. Size of queue: 1.
+
+
+      At time 100, the queue contains submissions: [1, 100]. Size of queue: 2.
+
+
+      At time 5000, the submission made at time 1 (which was 5000 seconds before this submission) is removed. Queue now: [100, 5000]. Size of queue: 2.
+
+
+      At time 5002, the queue contains submissions: [100, 5000, 5002]. Size of queue: 3.
+
+
+Thus, the maximum size of the submission queue observed at any point after all submissions is 3.
+
+
+
+
+SOLTUIONS:
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = sc.nextInt();           // Number of submissions
+        int[] arr = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            arr[i] = sc.nextInt();      // Submission timestamps
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+        int maxSize = 0;
+
+        for (int t : arr) {
+            // Remove submissions older than t - 5000
+            while (!queue.isEmpty() && queue.peek() <= t - 5000) {
+                queue.poll();
+            }
+
+            queue.offer(t);  // Add current submission
+            maxSize = Math.max(maxSize, queue.size());
+        }
+
+        System.out.println(maxSize);
+    }
+}
