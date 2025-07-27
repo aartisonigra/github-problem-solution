@@ -1,0 +1,91 @@
+Escape Plan
+Problem Statement
+John Wick needs to escape from an island represented by an unsorted linked list. To do so, he must sort the list and find the middle node. If the list has an even length, he should choose the first of the two middle nodes. Finding this node is crucial for his escape.
+Input Format
+The first line of the input contains a number N denoting the number of elements in linked list.
+
+The second line contains N spaced integer representing the element of linked list.
+
+Output Format
+The output contains the middle element of that list.
+
+Constraints
+1 < = N < = 10^6
+
+0 < = arr[ i ] < = 10^2
+
+Sample Testcase 0
+Testcase Input
+5
+1 2 3 4 5
+Testcase Output
+ 3
+Explanation
+Since the middle of the list is 3 so it is the escape for john wick.
+Sample Testcase 1
+Testcase Input
+6
+1 5 4 2 8 3
+Testcase Output
+3
+Explanation
+The sorted array will be [1,2,3,4,5,8]
+
+
+Then the middle of array is [3,4] we will print the first element i.e 3
+
+
+  solutions:
+
+  import java.util.*;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read input
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        
+        for(int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        
+        // Sort the array
+        Arrays.sort(arr);
+        
+        // Create linked list from sorted array
+        ListNode head = new ListNode(arr[0]);
+        ListNode current = head;
+        for(int i = 1; i < n; i++) {
+            current.next = new ListNode(arr[i]);
+            current = current.next;
+        }
+        
+        // Find middle node
+        ListNode middle = middleNode(head, n);
+        System.out.println(middle.val);
+    }
+
+    // Find middle node (if even, return first middle)
+    public static ListNode middleNode(ListNode head, int length) {
+        int mid = length / 2;
+        if(length % 2 == 0) mid--;  // first middle in even case
+
+        ListNode current = head;
+        for(int i = 0; i < mid; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+}
