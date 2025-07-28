@@ -1,0 +1,77 @@
+Muckers
+Problem Statement
+In the game of Muckers, players throw rings at rods for points. George visits a stall at a city fair where he can win a prize if he successfully places rings of all three colors—red, green, and blue—on a rod.
+
+You need to determine how many rods contain all three colors of rings after all rings have been placed. The input consists of a string S of length 2N, where every two characters represent a color-position pair:
+
+The first character indicates the ring's color ('r' for red, 'g' for green, 'b' for blue).
+The second character indicates the rod number (from '0' to '9') where the ring is placed.
+ 
+
+Input Format
+The first and only line of input consists string ‘S’ of length 2N, where every two characters represent a color-position pair.
+
+Output Format
+Print the number of rods that have rings of all three colors.
+
+ 
+Constraints
+2<= N <= 5*10^3
+
+Sample Testcase 0
+Testcase Input
+g2r2g1
+Testcase Output
+0
+Explanation
+None of the rod has all the color of rings.
+Here the rings are:
+Green and Red ring are on rod 2.
+Green ring on rod 1.
+
+Sample Testcase 1
+Testcase Input
+g4r2b1b2g2g1r1r2g2b3g3r4r3
+Testcase Output
+3
+Explanation
+We will see that only 1st , 2nd and 3rd rod has all three color of rings.
+Here the rings are:
+Red, Green and Blue rings on rod 1.
+Red, Green and Blue rings on rod 2.
+Red, Green and Blue rings on rod 3
+Green and Red ring on rod 4.
+
+SOLUTIONS:
+
+import java.io.*;
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String S = sc.nextLine();
+
+        // Map rod index to a set of colors on that rod
+        Map<Character, Set<Character>> rodMap = new HashMap<>();
+
+        for (int i = 0; i < S.length(); i += 2) {
+            char color = S.charAt(i);
+            char rod = S.charAt(i + 1);
+
+            // Add this color to the set for this rod
+            rodMap.putIfAbsent(rod, new HashSet<>());
+            rodMap.get(rod).add(color);
+        }
+
+        int count = 0;
+        // Count how many rods have all three colors
+        for (Set<Character> colors : rodMap.values()) {
+            if (colors.contains('r') && colors.contains('g') && colors.contains('b')) {
+                count++;
+            }
+        }
+
+        System.out.println(count);
+    }
+}
