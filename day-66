@@ -1,0 +1,82 @@
+Sentence Task
+Problem Statement
+Mohit’s teacher presented him with a Challenging task: to unscramble a sentence using specific guidelines. The sentence is provided as a list of words, each separated by single spaces. Each word must be rearranged according to its 1-indexed word position.
+
+For example, the phrase "This is a sentence" could be transformed into "SENTENCE4 IS2 A3 THIS1".
+
+Mohit’s teacher assigned him the Task of reconstructing the original sentence from these scrambled pieces, ensuring the final sentence has no more than 9 words. Mohit, being a supportive friend, took on the challenge to help Rohit complete the assignment given by his teacher
+
+Note: S consists of lowercase and uppercase English letters, spaces, and digits from 1 to 9. The words in S are separated by a single space. S contains no leading or trailing spaces.
+
+Input Format
+Input line will contain the string.
+
+Output Format
+Ouput the string according to the given condition in problem statement.
+
+Constraints
+2 <= S.length <= 200
+
+Sample Testcase 0
+Testcase Input
+World2 Hello1
+Testcase Output
+Hello World
+Explanation
+In this test case, the input sentence "Hello World" is scrambled according to the given rules.
+
+
+The word "World" is at position 2 in the original sentence, and "Hello" is at position 1.
+
+
+The scrambled sentence is rearranged to form the original sentence "Hello World."
+
+Sample Testcase 1
+Testcase Input
+industries5 transforming4 are3 models2 AI1
+Testcase Output
+AI models are transforming industries
+Explanation
+In this test case, the input sentence "AI models are transforming industries" is scrambled using the provided rules.
+
+
+Each word is correctly numbered and rearranged, resulting in the original sentence being reconstructed: "AI models are transforming industries"
+
+soltuions:
+
+import java.util.*;
+
+public class Main {
+    public static void sort_sentence(String s) {
+        String[] parts = s.split(" ");
+        String[] result = new String[9]; // max 9 words as per constraints
+
+        for (String word : parts) {
+            int len = word.length();
+            // Last char is the position
+            int pos = word.charAt(len - 1) - '0'; // converting char digit to int
+            String actualWord = word.substring(0, len - 1);
+            result[pos - 1] = actualWord;
+        }
+
+        // Join only non-null elements
+        StringBuilder sb = new StringBuilder();
+        for (String word : result) {
+            if (word != null) {
+                sb.append(word).append(" ");
+            }
+        }
+
+        // Trim the trailing space and print
+        System.out.println(sb.toString().trim());
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+        sort_sentence(input);
+    }
+}
+
+
+  
