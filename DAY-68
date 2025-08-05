@@ -1,0 +1,93 @@
+Problem Statement
+Certainly! In the digital realm of futuristic cities, Shyam found himself faced with a peculiar challenge. In this city of advanced technologies, information was stored in the form of linked lists, where each node had a unique value of either 0 or 1. These linked lists represented intricate binary notations of various numerical data.
+
+Shyam, the brilliant mathematician, was given a special task. He was handed a futuristic, singly-linked list where the nodes' binary values formed a complex pattern. This linked list, akin to a mysterious code, held the key to deciphering an essential piece of information. Shyam's mission was to convert this binary representation into its corresponding decimal value, a task that required his exceptional analytical skills.
+
+Guided by your expertise, help Shyam get the decimal value.
+
+Input Format
+The first line contains an integer n, representing the number of nodes in the linked list.
+
+The second line contains n space-separated binary integers, each representing a node's value.
+
+Output Format
+Print the decimal number formed by converting the binary representation given by the linked list.
+
+Constraints
+The linked list is not empty, i.e., it will contain at least 1 node.
+
+The number of nodes in the linked list will not exceed 30.
+
+Each node's value is a binary integer, either 0 or 1.
+
+Sample Testcase 0
+Testcase Input
+4
+1 1 0 1
+Testcase Output
+13
+Explanation
+The binary representation 1101 corresponds to the decimal number 13.
+
+Sample Testcase 1
+Testcase Input
+5
+1 0 1 0 1
+Testcase Output
+21
+Explanation
+The binary representation 10101 corresponds to the decimal number 21.
+
+
+SOLUTIONS:
+import java.util.*;
+
+class Node {
+    int val;
+    Node next;
+
+    Node(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+
+    // Function to convert binary linked list to decimal
+    public static int getDecimalValue(Node head) {
+        int result = 0;
+        while (head != null) {
+            result = result * 2 + head.val;
+            head = head.next;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt(); // number of nodes
+
+        Node head = null, tail = null;
+
+        // Create linked list from input
+        for (int i = 0; i < n; i++) {
+            int val = sc.nextInt();
+            Node newNode = new Node(val);
+
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+
+        // Convert and print decimal value
+        System.out.println(getDecimalValue(head));
+    }
+}
+
+
