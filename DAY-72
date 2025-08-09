@@ -1,0 +1,67 @@
+Subarray XOR
+Problem Statement
+Melisa likes the XOR operation very much. Recently, her teacher gave her a beautiful array A = [a1, a2, ..., an], where N is the size of the array, and asked her to find the XOR of all XOR values of all possible subarrays.
+
+Subarray XORs are the XOR values of all possible subarrays of the array A.
+
+Your task is to compute the XOR of all these subarray XOR values.
+
+Input Format
+The first line of input consists of the integer N representing the size of array.
+
+The second line contains N space-separated integers representing the elements of the array.
+
+Output Format
+Print the XOR of all XOR values of all possible subarrays.
+
+Constraints
+1<= N<= 10^4
+
+0<= Ai <= 10^4
+
+Sample Testcase 0
+Testcase Input
+5
+3 5 2 4 6
+Testcase Output
+7
+Explanation
+Total XOR of all subarray XORs is,
+(3) ^ (5) ^ (2) ^ (4) ^ (6) ^ (3^5) ^ (5^2) ^ (2^4) ^ (4^6) ^ (3^5^2) ^ (5^2^4) ^ (2^4^6) ^ (3^5^2^4) ^ (5^2^4^6) ^ (3^5^2^4^6) = 7.
+Sample Testcase 1
+Testcase Input
+3
+1 2 3
+Testcase Output
+2
+Explanation
+Total XOR of all subarray XORs is, (1) ^ (2) ^ (3) ^ (1^2) ^ (2^3) ^ (2^ 3 ^ 1) = 2.
+
+
+SOLUTIONS:
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int[] arr = new int[N];
+        for (int i = 0; i < N; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        System.out.println(getTotalXorOfSubarrayXors(arr, N));
+    }
+
+    public static int getTotalXorOfSubarrayXors(int[] arr, int N) {
+        int result = 0;
+        for (int i = 0; i < N; i++) {
+            int count = (i + 1) * (N - i); // how many subarrays include arr[i]
+            if (count % 2 != 0) { // if count is odd
+                result ^= arr[i];
+            }
+        }
+        return result;
+    }
+}
+
+
