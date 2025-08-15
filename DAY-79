@@ -1,0 +1,78 @@
+Good People
+Problem Statement
+Mocha recently attended a gathering where there were n people standing in a straight line. Each person was given a goodness index. Mocha's task was to first sort these people in ascending order. After sorting, he needed to arrange them in the form of a tree. In this tree structure, his goal was to determine the number of good people.
+
+A person, let's call them X in the tree, is considered good if, on the path from the root to X, there are no nodes with a value greater than X. Mocha's objective was to calculate the count of such good people.
+
+Input Format
+The first line contains an integer n, denoting the size of array.
+
+The second line contains n integers.
+
+Output Format
+The output contains a single integer depicting the number of good people
+
+Constraints
+1<=n<=10^5
+
+1<=num[n]<=100
+
+Sample Testcase 0
+Testcase Input
+3
+3 1 2 
+Testcase Output
+3
+Explanation
+After creating the tree of the sorted version of the array above we have the tree as shown above. In the tree above all 1,2,3 are good as every node follows the condition of a good person.
+Sample Testcase 1
+Testcase Input
+4
+4 3 2 1 
+Testcase Output
+4
+Explanation
+After creating the tree of the sorted version of the array above we have the tree as shown above. In the tree above all 1,2,3,4 are good as every node follows the condition of good person.
+
+SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int x) { val = x; }
+    }
+
+    // Build tree in level order from sorted array
+    static TreeNode buildTree(int[] arr, int i) {
+        if (i >= arr.length) return null;
+        TreeNode root = new TreeNode(arr[i]);
+        root.left = buildTree(arr, 2 * i + 1);
+        root.right = buildTree(arr, 2 * i + 2);
+        return root;
+    }
+
+    static int countGood(TreeNode root, int maxSoFar) {
+        if (root == null) return 0;
+        int count = 0;
+        if (root.val >= maxSoFar) {
+            count = 1;
+            maxSoFar = root.val; // update max so far
+        }
+        count += countGood(root.left, maxSoFar);
+        count += countGood(root.right, maxSoFar);
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+        Arrays.sort(arr); // step 1
+        TreeNode root = buildTree(arr, 0); // step 2
+        System.out.println(countGood(root, Integer.MIN_VALUE)); // step 3
+    }
+}
