@@ -1,0 +1,78 @@
+Spare Balls
+Problem Statement
+You have N boxes numbered from 1 to N. Each box contains a certain number of balls. Additionally, you have M spare balls, and you can choose to put all of them into any one of the boxes.
+
+For each box, determine if adding all the spare balls to that box will make it the box with the largest number of balls. Note that multiple boxes can have the maximum number of balls.
+
+Input Format
+The first line of the input contains two integers N (number of boxes) and M (number of spare balls).
+
+The second line of the input contains N space-separated integers a1, a2, …, an, where ai represents the number of balls in the ith box.
+
+Output Format
+For each box, print “1” if it will be the box with the largest number of balls after adding the spare balls and “0” if not.
+
+Constraints
+1 <= N <= 10^5
+
+1 <= M <= 10^3
+
+0 <= Ai<= 10^3
+
+Sample Testcase 0
+Testcase Input
+3 10
+12 1 2
+Testcase Output
+1 0 1
+Explanation
+We have 10 spare ball. The current highest number of balls in a box is 12 so after adding the spare balls to the box we need to have the number of balls in the box to be greater than equal to 12 so that it becomes the box with the highest number of balls.
+
+
+This is possible in 2 cases (0th box and 2nd box).
+
+Sample Testcase 1
+Testcase Input
+5 1
+4 2 1 1 2
+Testcase Output
+1 0 0 0 0
+Explanation
+We have 1 spare ball. The current highest number of balls in a box is 4 so after adding the spare balls to the box we need to have the number of balls in the box to be greater than equal to 4 so that it becomes the box with highest number of balls. 
+
+
+This is possible in only 1 case (0th box). 
+
+SOLTUIONS:
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        int N = sc.nextInt(); // Number of boxes
+        int M = sc.nextInt(); // Number of spare balls
+        
+        int[] balls = new int[N];
+        int maxBalls = 0;
+        
+        // Read balls in each box and find current maximum
+        for (int i = 0; i < N; i++) {
+            balls[i] = sc.nextInt();
+            if (balls[i] > maxBalls) {
+                maxBalls = balls[i];
+            }
+        }
+        
+        // Check for each box if adding M spare balls makes it largest
+        for (int i = 0; i < N; i++) {
+            if (balls[i] + M >= maxBalls) {
+                System.out.print("1 ");
+            } else {
+                System.out.print("0 ");
+            }
+        }
+    }
+}
+
