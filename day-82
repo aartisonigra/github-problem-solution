@@ -1,0 +1,84 @@
+Problem Statement
+Alice lines up "n" bulbs that she has in her home. Each bulb has a value written on it - the power of the bulb. The non-functional bulb has a value of 0.
+
+She wants you to move all the non-functional bulbs to the end of the row of bulbs while maintaining the original relative ordering of the functional bulbs.
+
+Input Format
+The first line of the input contains 'n' number of bulbs in her home
+
+The second line  contains n Integers representing the power of each bulb.
+
+Output Format
+Output the final order of the bulbs by their power values, with all non-functional bulbs (those with a power value of 0) moved to the end, while maintaining the order of the functional bulbs.
+
+Constraints
+1 <= n < 10^5
+
+-2^31 <= power[i] <=2^31-1
+
+Sample Testcase 0
+Testcase Input
+3
+0
+0
+15
+Testcase Output
+15 0 0
+Explanation
+Moving the non-functional bulbs (power = 0) to the end while maintaining the original relative ordering of the functional bulbs ( power != 0)
+
+Sample Testcase 1
+Testcase Input
+9
+5
+3
+0
+4
+1
+0
+0
+2
+1
+Testcase Output
+5 3 4 1 2 1 0 0 0
+Explanation
+Moving the non-functional bulbs (power = 0) to the end while maintaining the original relative ordering of the functional bulbs ( power != 0)
+
+  SOLUTIONS:
+
+  import java.io.*;
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read number of bulbs
+        int n = sc.nextInt();
+        int[] bulbs = new int[n];
+        
+        // Read bulb powers
+        for (int i = 0; i < n; i++) {
+            bulbs[i] = sc.nextInt();
+        }
+        
+        // Two pointer approach to move non-zero elements forward
+        int index = 0; 
+        for (int i = 0; i < n; i++) {
+            if (bulbs[i] != 0) {
+                bulbs[index++] = bulbs[i];  // Place non-zero at current index
+            }
+        }
+        
+        // Fill remaining positions with zeros
+        while (index < n) {
+            bulbs[index++] = 0;
+        }
+        
+        // Print result
+        for (int i = 0; i < n; i++) {
+            System.out.print(bulbs[i]);
+            if (i < n - 1) System.out.print(" ");
+        }
+    }
+}
