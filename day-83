@@ -1,0 +1,80 @@
+Distinctive Car Features
+Problem Statement
+Ram spots a line of N cars on the busy street, each with a unique feature. You're provided with an array called "features," where features[i] represent a distinctive feature of the ith car.
+
+Ram's quest is to discover the widest separation between two cars with different features. Can you help Ram with his quest?
+
+Remember, this distance is determined by the absolute difference in their positions (abs(i - j)).
+
+Input Format
+The first line contains an integer N, the number of cars.
+
+The second line contains N space-separated integers, where each integer denotes the feature of the i-th car.
+
+Output Format
+Print a single integer, which is the widest separation between any two cars that have different features.
+
+Constraints
+2 <= N <= 10^2
+
+0 <= features[i] <= 10^3
+
+Sample Testcase 0
+Testcase Input
+20
+32 8 23 90 19 29 16 40 95 11 51 9 24 50 36 100 84 60 79 63
+Testcase Output
+19
+Explanation
+The maximum distance between two cars with distinctive features is at 0th and 19th index = |0-19| = 19. 
+
+Sample Testcase 1
+Testcase Input
+8
+9 9 5 4 2 9 9 9
+Testcase Output
+5
+Explanation
+The maximum distance between two cars with distinctive features is at 2nd and 7th index = |2-7| = 5.
+
+Sample Testcase 2
+Testcase Input
+6
+4 3 3 6 2 4
+Testcase Output
+4
+Explanation
+The maximum distance between two cars with distinctive features is at 0th and 4th index = |0-4| = 4.
+
+  SOLTUIONS:
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int[] features = new int[N];
+        for (int i = 0; i < N; i++) {
+            features[i] = sc.nextInt();
+        }
+
+        int maxDistance = 0;
+
+        // Compare first element with others and last element with others
+        for (int i = 0; i < N; i++) {
+            for (int j = N - 1; j >= 0; j--) {
+                if (features[i] != features[j]) {
+                    int distance = Math.abs(j - i);
+                    if (distance > maxDistance) {
+                        maxDistance = distance;
+                    }
+                    break; // No need to check closer j's for this i
+                }
+            }
+        }
+
+        System.out.println(maxDistance);
+    }
+}
+
+  
