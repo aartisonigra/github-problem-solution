@@ -1,0 +1,94 @@
+Target Sum
+Problem Statement
+Marco is very interested in numbers. His friend Shyam gives him a list of numbers and a target value to test his numerical skills. Shyam asks Marco to find the total number of ways to add a '+' or '-' sign before each number in the list so that the resulting expression equals the target value.
+
+Input Format
+The first line contains an integer N, the count of numbers provided by Shyam..
+
+The second line contains N integers representing the list of numbers.
+
+The third line contains an integer ‘target’.
+
+Output Format
+The first line contains the integer ‘ways’, the total count of expressions.
+
+Constraints
+1 <= nums.length <= 20
+
+0 <= nums[i] <= 10^3
+
+0 <= sum(nums[i]) <= 10^3
+
+-10^3 <= target <= 10^3
+
+Sample Testcase 0
+Testcase Input
+1
+1
+1
+Testcase Output
+1
+Explanation
+There can be only one expression formed:
++1 whcih is equal to the target value 1.
+
+Sample Testcase 1
+Testcase Input
+5
+2 1 4 1 3
+5
+Testcase Output
+3
+Explanation
+The following expressions can be formed:
+1) -2-1+4+1+3 = 5
+2) -2+1+4-1+3 = 5
+3) +2+1+4+1-3 = 5
+
+
+
+  SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    static Map<String, Integer> memo = new HashMap<>();
+
+    public static int user_logic(int[] nums, int target) {
+        return countWays(nums, 0, 0, target);
+    }
+
+    private static int countWays(int[] nums, int index, int currentSum, int target) {
+        if (index == nums.length) {
+            return (currentSum == target) ? 1 : 0;
+        }
+
+        String key = index + "," + currentSum; // memoization key
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        // Choice 1: Add nums[index]
+        int add = countWays(nums, index + 1, currentSum + nums[index], target);
+
+        // Choice 2: Subtract nums[index]
+        int subtract = countWays(nums, index + 1, currentSum - nums[index], target);
+
+        int totalWays = add + subtract;
+        memo.put(key, totalWays);
+        return totalWays;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        int target = scanner.nextInt();
+
+        System.out.println(user_logic(nums, target));
+    }
+}
