@@ -1,0 +1,77 @@
+Coin Stacking
+Problem Statement
+Krutin has a collection of n coins and wants to build a staircase with them. The staircase consists of multiple stairs, where the first stair requires 1 coin, the second stair requires 2 coins, the third stair requires 3 coins, and so on. The number of coins required for each stair increases incrementally by 1 as the stair number increases.
+
+Your task is to determine how many full stairs Krutin can build using all the coins.
+
+Input Format
+The first line contains an integer n, representing the number of coins.
+
+Output Format
+Print a single integer representing the number in full stairs that can be completely built.
+
+Constraints
+1 <= n <= 10^18
+
+ 
+Sample Testcase 0
+Testcase Input
+8
+Testcase Output
+3
+Explanation
+Total Coins: 8
+
+The first stair needs 1 coin to complete the stair.
+The second stair needs 2 coins to complete the stair.
+The third stair needs 3 coins to complete the stair.
+The fourth stair needs 4 coins to complete the stair, but there are not enough coins for the fourth stair.
+
+
+Therefore, there would be 3 complete stair of coins.
+
+Sample Testcase 1
+Testcase Input
+6
+Testcase Output
+3
+Explanation
+Total Coins = 6
+
+The first stair needs 1 coin to complete the stair.
+The second stair needs 2 coins to complete the stair.
+The third stair needs 3 coins to complete the stair.
+
+
+The total number of coins required is 1 + 2 + 3 = 6 Therefore, there would be 3 complete stair of coins.
+
+  SOLUTIONs:
+import java.util.Scanner;
+
+public class Main {
+    public static long full_stairs(long n) {
+        long low = 0, high = (long) Math.sqrt(2 * (double)n) + 1; // upper bound
+        long result = 0;
+
+        while (low <= high) {
+            long mid = low + (high - low) / 2;
+            long coinsNeeded = mid * (mid + 1) / 2;
+
+            if (coinsNeeded <= n) {
+                result = mid;  // possible answer
+                low = mid + 1; // try for bigger k
+            } else {
+                high = mid - 1; // reduce
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long n = scanner.nextLong();
+        System.out.println(full_stairs(n));
+    }
+}
+
+
