@@ -1,0 +1,102 @@
+Captures for R
+Problem Statement
+Ram has given a exactly one white rook ('R') and a certain number of white bishops ('B'), black pawns ('p'), and empty squares ('.') on an 8 x 8 chessboard.
+
+When a rook moves, it chooses one of four cardinal directions (north, east, south, or west) and travels in that direction until it stops, reaches the board's edge, captures a black pawn, or is blocked by a white bishop. If a rook can take a pawn in the rook's turn, the rook is considered to be attacking the pawn. The number of pawns the white rook is attacking determines the number of available captures.
+
+ 
+
+The number of captures available for the white rook should be returned, but ram is fool so help him out to find the answer.
+
+Input Format
+Input will contain 8*8 matrix elements.
+Output Format
+Ram need to return the number of captures available for the white rook, which you need to do.
+
+Constraints
+board.length == 8
+board[i].length == 8
+board[i][j] is either 'R', '.', 'B', or 'p'
+There is exactly one cell with board[i][j] == 'R'
+Sample Testcase 0
+Testcase Input
+. . . . . . . . 
+. . . p . . . .
+. . . R . . . p
+. . . . . . . . 
+. . . . . . . . 
+. . . p . . . .
+. . . . . . . . 
+. . . . . . . p
+Testcase Output
+3
+Sample Testcase 1
+Testcase Input
+. . . . . . . . 
+. . . p . . . .
+. . . R . . . p
+. . . . . . . . 
+. . . . . . . . 
+. . . p . . . .
+. . . . . . . . 
+. . . . . . . . 
+Testcase Output
+3
+Explanation
+ In this example, the rook is attacking all the pawns.
+
+SOLTUIONS:
+import java.util.*;
+
+class Main {
+    public static int numRookCaptures(char[][] board) {
+        int rookRow = -1, rookCol = -1;
+
+        // Find the rook
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == 'R') {
+                    rookRow = i;
+                    rookCol = j;
+                    break;
+                }
+            }
+        }
+
+        int captures = 0;
+        int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}}; // up, down, left, right
+
+        for (int[] dir : dirs) {
+            int r = rookRow, c = rookCol;
+            while (true) {
+                r += dir[0];
+                c += dir[1];
+
+                if (r < 0 || r >= 8 || c < 0 || c >= 8) break; // outside board
+                if (board[r][c] == 'B') break; // bishop blocks
+                if (board[r][c] == 'p') { // pawn captured
+                    captures++;
+                    break;
+                }
+            }
+        }
+
+        return captures;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char[][] board = new char[8][8];
+
+        // Read 64 characters no matter if spaces or new lines
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = sc.next().charAt(0);
+            }
+        }
+
+        System.out.println(numRookCaptures(board));
+    }
+}
+
+
