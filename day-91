@@ -1,0 +1,81 @@
+Check Name
+Problem Statement
+Alex and Bob want to find out the common characters between N strings of names. Help Alex and Bob find it.
+
+Print the common letters in lexicographical order.
+
+Input Format
+The first line contains a single digit N (no of strings).
+The next N lines contain the strings.
+Output Format
+You have to print all of the common characters that strictly appear in every single string in lexicographical order.
+
+Note: Each common character should be displayed in square brackets '[]'.
+
+Constraints
+1<=n<=100
+1<=n[i].size()<=50000
+Sample Testcase 0
+Testcase Input
+2
+Bella
+alex
+Testcase Output
+[a][e][l]
+Explanation
+Bella and Alex have a, l and e in common.
+
+Sample Testcase 1
+Testcase Input
+3
+abcd
+cdef
+mdec
+Testcase Output
+[c][d]
+Explanation
+In all three strings, the letters c and d are common. So, in lexicographical order, the output is: [c][d]
+
+SOLUTIONS:
+
+  import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();  
+        sc.nextLine(); // consume newline
+
+        // Initialize minFreq with very large values
+        int[] minFreq = new int[26];
+        Arrays.fill(minFreq, Integer.MAX_VALUE);
+
+        for (int i = 0; i < n; i++) {
+            String str = sc.nextLine().toLowerCase();
+
+            // Count frequency for current string
+            int[] freq = new int[26];
+            for (char c : str.toCharArray()) {
+                if (c >= 'a' && c <= 'z') {
+                    freq[c - 'a']++;
+                }
+            }
+
+            // Update global minimum frequencies
+            for (int j = 0; j < 26; j++) {
+                minFreq[j] = Math.min(minFreq[j], freq[j]);
+            }
+        }
+
+        // Print common characters in lexicographical order
+        for (int j = 0; j < 26; j++) {
+            for (int k = 0; k < minFreq[j]; k++) {
+                System.out.print("[" + (char)(j + 'a') + "]");
+            }
+        }
+    }
+}
+
+
+  
