@@ -1,0 +1,114 @@
+Minimum K-Bit Flips with Flip Limit
+Problem Statement
+You are given a binary array arr[] of length N, where each element is either 0 or 1. You are allowed to perform a k-bit flip operation, which means selecting a contiguous subarray of exactly K elements and inverting each bit in that subarray (i.e., converting 0 to 1 and 1 to 0).
+
+Additionally, you are provided with an integer M, which denotes the maximum number of such flip operations you are allowed to perform.
+
+Your goal is to transform the array such that every element becomes 1, using as few flip operations as possible.
+
+Return the minimum number of K-bit flips required to achieve the goal.
+
+If it's not possible to make all elements 1 within at most m flips, return -1.
+
+Input Format
+The first line contains three integers: N, K, and M — the size of the array, the size of each flip, and the maximum allowed number of flips.
+
+The second line contains n space-separated integers, representing the elements of the array arr[] (each either 0 or 1).
+
+Output Format
+Print a single integer — the minimum number of K-bit flips needed to make all elements 1, or -1 if it's not possible within M flips.
+
+Constraints
+1 <= N <= 10^5
+
+1 <= K <= n
+
+0 <= M <= 10^5
+
+arr[i] ∈ {0, 1} for 0 <= i < n
+
+Sample Testcase 0
+Testcase Input
+6 2 3
+0 0 1 0 1 0
+Testcase Output
+3
+Explanation
+Flip at index 0: [0,0] → [1,1] → [1,1,1,0,1,0]
+
+
+Flip at index 3: [0,1] → [1,0] → [1,1,1,1,0,0]
+
+
+Flip at index 4: [0,0] → [1,1] → [1,1,1,1,1,1]
+
+
+Total flips = 3 (equals m) 
+
+Sample Testcase 1
+Testcase Input
+5 3 2
+0 0 0 1 1
+Testcase Output
+1
+Explanation
+Flip at index 0: [0,0,0] → [1,1,1]
+
+
+Array becomes: [1,1,1,1,1] 
+
+
+Total flips used = 1 ≤ m = 2 → Valid
+
+SOLUTIONS:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int min_k_bit_flips(int* arr, int n, int k, int m) {
+    int* isFlipped = (int*)calloc(n, sizeof(int)); // mark flip starts
+    int flipCount = 0;   // number of flips used
+    int currFlip = 0;    // parity of flips affecting current index
+
+    for (int i = 0; i < n; i++) {
+        if (i >= k) {
+            currFlip ^= isFlipped[i - k]; // remove effect of flip that expired
+        }
+
+        // If current bit after flips is 0, we must flip here
+        if ((arr[i] ^ currFlip) == 0) {
+            if (i + k > n) {
+                free(isFlipped);
+                return -1; // can't flip, out of bounds
+            }
+            flipCount++;
+            if (flipCount > m) {
+                free(isFlipped);
+                return -1; // exceed max flips
+            }
+            currFlip ^= 1;        // start new flip
+            isFlipped[i] = 1;     // mark flip start
+        }
+    }
+
+    free(isFlipped);
+    return flipCount;
+}
+
+int main() {
+    int n, k, m;
+    scanf("%d %d %d", &n, &k, &m);
+
+    int* arr = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int result = min_k_bit_flips(arr, n, k, m);
+    printf("%d\n", result);
+
+    free(arr);
+    return 0;
+}
+
+
