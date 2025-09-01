@@ -1,0 +1,92 @@
+Non-overlapping Intervals
+Problem Statement
+Given an array of intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
+
+Input Format
+First line contains an integers denoting the no. of rows, N.
+
+Second line contains an integer M, which will always be 2.
+
+Next N lines contains two space-seprated integers denoted start and end.
+
+Output Format
+Display the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
+
+Constraints
+1 <= intervals.length<= 105
+intervals[i].length == 2
+-5 * 104<= starti <endi <= 5 * 104
+Sample Testcase 0
+Testcase Input
+3
+2
+1 2
+1 2
+1 2
+Testcase Output
+2
+Explanation
+You need to remove two [1,2] to make the rest of the intervals non-overlapping.
+Sample Testcase 1
+Testcase Input
+1 
+2
+2 3
+Testcase Output
+0
+Explanation
+You don't need to remove any of the intervals since they're already non-overlapping.
+
+
+
+  SOLUTIONS;
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_N 1000
+
+// comparator for qsort (sort by end time)
+int cmp(const void *a, const void *b) {
+    int *int1 = (int *)a;
+    int *int2 = (int *)b;
+    if (int1[1] == int2[1]) return int1[0] - int2[0];
+    return int1[1] - int2[1];
+}
+
+int eraseOverlapIntervals(int intervals[MAX_N][2], int N) {
+    if (N == 0) return 0;
+
+    // sort intervals by end time
+    qsort(intervals, N, sizeof(intervals[0]), cmp);
+
+    int count = 0;        // removals
+    int end = intervals[0][1]; // end of first chosen interval
+
+    for (int i = 1; i < N; i++) {
+        if (intervals[i][0] < end) {
+            // overlap → remove this interval
+            count++;
+        } else {
+            // non-overlapping → update end
+            end = intervals[i][1];
+        }
+    }
+    return count;
+}
+
+int main() {
+    int N, M;
+    scanf("%d", &N);
+    scanf("%d", &M); // always 2 (ignore)
+
+    int intervals[MAX_N][2];
+    for (int i = 0; i < N; i++) {
+        scanf("%d %d", &intervals[i][0], &intervals[i][1]);
+    }
+
+    int result = eraseOverlapIntervals(intervals, N);
+    printf("%d\n", result);
+
+    return 0;
+}
