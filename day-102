@@ -1,0 +1,126 @@
+Problem Statement
+You are given a 1D garden with N plants aligned in a row. Each plant requires a certain amount of water, given in an array W[0…N-1]. You have K water jets, each of which can water a contiguous segment of plants, but once used, the water jet can't be reused or moved.
+
+Each water jet can water a maximum of R units of water in total (not number of plants). You need to position these water jets to cover the garden such that every plant receives exactly the water it needs and no plant is watered more than once.
+
+Your task is to determine if it is possible to position all K water jets (each jet watering a contiguous segment) such that all plants get their required amount of water without overlapping and without exceeding jet limits.
+
+Input Format
+First line: Two integers N and K
+
+Second line: An array of N integers W[i] — the amount of water required by the i-th plant.
+
+Third line: A single integer R — the maximum amount of water a jet can distribute.
+
+Output Format
+Print "YES" if it is possible to water all plants with the given jets and constraints. Otherwise, print "NO".
+
+Constraints
+1 ≤ N ≤ 10^5
+
+1 ≤ K ≤ N
+
+1 ≤ W[i] ≤ 10^3
+
+1 ≤ R ≤ 10^9
+
+Sample Testcase 0
+Testcase Input
+4 1
+2 2 3 4
+7
+Testcase Output
+NO
+Explanation
+Water requirements: [2, 2, 3, 4]
+Max water per jet: 7
+Available jets: 1
+
+
+Strategy:
+Try to water all with one jet:
+Total water = 2 + 2 + 3 + 4 = 11 > 7 Invalid
+
+
+Try smaller groups:
+Jet 1: water first few (say 2+2+3 = 7) Valid
+
+
+Remaining (4) not covered and no more jets 
+
+
+Output: NO
+
+Sample Testcase 1
+Testcase Input
+5 2
+3 2 2 1 2
+5
+Testcase Output
+YES
+Explanation
+Water requirements: [3, 2, 2, 1, 2]
+Max water per jet: 5
+Available jets: 2
+
+
+Strategy:
+Jet 1: water plants 0–1 → 3 + 2 = 5
+Jet 2: water plants 2–4 → 2 + 1 + 2 = 5
+
+
+All plants are covered, no overlap, total jets used = 2 ≤ K
+Output: YES
+
+
+  SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static boolean canWaterAllPlants(int[] W, int K, int R) {
+        int countOfJets = 1;
+        int currentWater = 0;
+        
+        for (int i = 0; i < W.length; i++) {
+            if (W[i] > R) {
+                // Single plant requires more than jet capacity → Impossible
+                return false;
+            }
+            
+            if (currentWater + W[i] <= R) {
+                currentWater += W[i];
+            } else {
+                // Start a new jet
+                countOfJets++;
+                currentWater = W[i];
+            }
+        }
+        
+        return countOfJets <= K;
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        int N = sc.nextInt();
+        int K = sc.nextInt();
+        
+        int[] W = new int[N];
+        for (int i = 0; i < N; i++) {
+            W[i] = sc.nextInt();
+        }
+        
+        int R = sc.nextInt();
+        
+        boolean result = canWaterAllPlants(W, K, R);
+        
+        if (result) {
+            System.out.println("YES");
+        } else {
+            System.out.println("NO");
+        }
+        
+        sc.close();
+    }
+}
