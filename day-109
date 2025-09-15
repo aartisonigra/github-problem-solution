@@ -1,0 +1,118 @@
+Adaptive Bitwise Encoding
+Problem Statement
+In a futuristic data processing system, you are assigned the task of optimizing bitwise computations for high-speed transmissions. The system receives three integers: X, Y, and Z, representing encrypted signals. Your mission is to decode the bitwise relationship between X and Y, apply specialized shifting techniques, and mask the results based on Z.
+
+However, due to signal interference, the system requires a dynamic shifting approach rather than a fixed shift operation. Additionally, a custom masking technique is needed to ensure secure transmission. Your task is to perform the following operations and provide the processed results.
+
+Operations to Perform:
+
+Bitwise Analysis:
+
+Compute the AND, OR, and XOR results of X and Y.
+Secure Masking for Transmission:
+
+Generate a bitmask from Z:
+If Z is even, the bitmask is ((1 << (Z % 10)) - 1).
+If Z is odd, the bitmask is ((1 << (Z % 5 + 2)) - 1).
+Apply the bitmask to AND, OR, and XOR results using bitwise AND with the mask to ensure secure transmission.
+Your challenge is to successfully process the data and output the transformed values while maintaining integrity under these dynamic constraints.
+
+Input Format
+The First line contains an integer X, representing the first signal.
+
+The Second line contains an integer Y, representing the second signal.
+
+The Third line contains an integer Z, used for shifting and masking.
+
+Output Format
+Print results of AND, OR, XOR operations in separate line.
+
+Print Generated Bitmask.
+
+Print the masked versions of AND, OR, XOR results in separate line.
+
+Constraints
+-10^6 <= X, Y, Z <= 10^6
+
+Sample Testcase 0
+Testcase Input
+45
+29
+38
+Testcase Output
+AND: 13
+OR: 61
+XOR: 48
+Generated Bitmask: 255
+Masked AND: 13
+Masked OR: 61
+Masked XOR: 48
+Explanation
+Bitwise Operations: AND = 13, OR = 61, XOR = 48 (basic bitwise calculations).
+
+
+Bitmask: Generated as 255, applied to results (no change in this case)
+
+Sample Testcase 1
+Testcase Input
+2
+3
+5
+Testcase Output
+AND: 2
+OR: 3
+XOR: 1
+Generated Bitmask: 3
+Masked AND: 2
+Masked OR: 3
+Masked XOR: 1
+Explanation
+Bitwise Operations: AND = 2, OR = 3, XOR = 1 (basic bitwise results).
+
+
+Bitmask: Z is odd → Mask = 3. Applied, but no change in results.
+
+
+  SOLUTIONS:
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int X = Integer.parseInt(scanner.nextLine());
+        int Y = Integer.parseInt(scanner.nextLine());
+        int Z = Integer.parseInt(scanner.nextLine());
+
+        // Step 1: Bitwise Operations
+        int andResult = X & Y;
+        int orResult = X | Y;
+        int xorResult = X ^ Y;
+
+        // Step 2: Generate Bitmask
+        int bitmask;
+        if (Z % 2 == 0) {
+            bitmask = (1 << (Z % 10)) - 1;
+        } else {
+            bitmask = (1 << (Z % 5 + 2)) - 1;
+        }
+
+        // Step 3: Apply Bitmask
+        int maskedAnd = andResult & bitmask;
+        int maskedOr = orResult & bitmask;
+        int maskedXor = xorResult & bitmask;
+
+        // Step 4: Print Results
+        System.out.println("AND: " + andResult);
+        System.out.println("OR: " + orResult);
+        System.out.println("XOR: " + xorResult);
+        System.out.println("Generated Bitmask: " + bitmask);
+        System.out.println("Masked AND: " + maskedAnd);
+        System.out.println("Masked OR: " + maskedOr);
+        System.out.println("Masked XOR: " + maskedXor);
+
+        scanner.close();
+    }
+}
+
+  
