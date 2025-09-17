@@ -1,0 +1,162 @@
+Carrom Coin Cascade
+Problem Statement
+You are playing a digital version of Carrom on an N x N square board. The board has coins placed on some of the grid cells, and your striker can shoot in one of four directions: up, down, left, or right from its current position.
+
+Each coin has a value v, and once hit by the striker, the coin slides in the same direction until it either:
+
+hits another coin (and both coins are removed), or
+
+hits the edge of the board (in which case the coin is removed).
+
+However, if two coins collide, their values are added to your score.
+
+The striker starts at a given position (Sx, Sy). You are allowed at most one shot in any one direction (U, D, L, R).
+
+Your task is to determine the maximum possible score you can achieve with a single shot in any of the four directions.
+
+Input Format
+First line contains a single integer N representing the size of the square board (N x N).
+
+Second line contains two integers sx and sy representing the starting position of the striker.
+
+Third line contains a single integer M representing the number of coins on the board.
+
+Next M lines each contain three integers x, y, and v representing the position (x, y) of a coin and its value v.
+
+Output Format
+Print the the maximum possible score you can achieve with a single shot in any of the four directions.
+
+Constraints
+1 ≤ N ≤ 100
+
+0 ≤ Sx,Sy < N
+
+0 ≤ M ≤ N^2
+
+0 ≤ xi, yi < N
+
+1 ≤ vi ≤ 10^4
+
+Sample Testcase 0
+Testcase Input
+4
+1 1
+3
+1 2 4
+1 3 6
+1 0 5
+Testcase Output
+10
+Explanation
+Striker at (1,1)
+
+
+Right:
+Hits (1,2)=4, slides to (1,3)=6 → Score = 4+6 = 10
+
+
+Left:
+Hits (1,0)=5, slides to edge → Score = 5
+
+
+Up / Down → No coins
+Output: 10
+
+Sample Testcase 1
+Testcase Input
+5
+2 2
+4
+2 3 5
+2 4 10
+0 2 7
+1 2 3
+Testcase Output
+15
+Explanation
+Striker starts at (2,2
+
+
+Coins at:
+Right → (2,3)=5, then (2,4)=10 → collide → Score = 5+10 = 15
+Up → (1,2)=3, then (0,2)=7 → collide → Score = 3+7 = 10
+Left and Down → No coins ahead
+
+
+  SOLUITONS:
+import java.util.*;
+
+public class Main {
+    public static int getMaxScore(int N, int sx, int sy, List<int[]> coins) {
+        int[][] board = new int[N][N];
+
+        // Place the coins on the board
+        for (int[] coin : coins) {
+            int x = coin[0];
+            int y = coin[1];
+            int v = coin[2];
+            board[x][y] = v;
+        }
+
+        int maxScore = 0;
+
+        // Four directions: up, down, left, right
+        int[] dx = {-1, 1, 0, 0};  // Up, Down, Left, Right
+        int[] dy = {0, 0, -1, 1};
+
+        for (int dir = 0; dir < 4; dir++) {
+            int x = sx;
+            int y = sy;
+            int score = 0;
+            boolean firstCoinFound = false;
+            int firstCoinValue = 0;
+
+            while (true) {
+                x += dx[dir];
+                y += dy[dir];
+
+                if (x < 0 || x >= N || y < 0 || y >= N) {
+                    break;
+                }
+
+                if (board[x][y] != 0) {
+                    if (!firstCoinFound) {
+                        // First coin encountered
+                        firstCoinValue = board[x][y];
+                        firstCoinFound = true;
+                    } else {
+                        // Second coin encountered → collision happens
+                        score = firstCoinValue + board[x][y];
+                        break;
+                    }
+                }
+            }
+
+            maxScore = Math.max(maxScore, score);
+        }
+
+        return maxScore;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int sx = scanner.nextInt();
+        int sy = scanner.nextInt();
+        int M = scanner.nextInt();
+
+        List<int[]> coins = new ArrayList<>();
+        for (int i = 0; i < M; i++) {
+            int x = scanner.nextInt();
+            int y = scanner.nextInt();
+            int v = scanner.nextInt();
+            coins.add(new int[]{x, y, v});
+        }
+
+        int result = getMaxScore(N, sx, sy, coins);
+        System.out.println(result);
+    }
+}
+
+                   
