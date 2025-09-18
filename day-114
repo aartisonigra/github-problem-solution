@@ -1,0 +1,145 @@
+Dynamic Bank Security Code System
+Problem Statement
+A bank is implementing a Dynamic Security Code System (DSCS) for its high-net-worth customers. Every transaction must pass through a security code validator, which is based on a unique rule set.
+
+The bank maintains a list of accounts, and each account is associated with a security string of digits (0–9). For each transaction, a one-time code is generated from the security string using the following rule:
+
+Starting from the first digit, for each digit d at position i (1-based index), you do:
+
+If d is even, add d * i to the total sum.
+
+If d is odd, subtract d * i from the total sum.
+
+The absolute value of this total sum becomes the final security code.
+
+Now, given a list of accounts and their security strings, determine:
+
+Which account has the highest security code value.
+
+In case of a tie, choose the account that appears first in the input.
+
+Note: S contains only digits [0–9].
+
+Input Format
+First line contains an integer N representing the number of accounts
+
+Next N lines each contain a string S consisting of digits, representing the security string for each account
+
+Output Format
+Print two values separated by a space:
+
+The 1-based index of the account with the highest security code.
+
+The security code value of that account.
+
+Constraints
+1 ≤ N ≤ 10^3
+
+1 ≤ |S| ≤ 10^3
+
+Sample Testcase 0
+Testcase Input
+2
+0000
+9999
+Testcase Output
+2 90
+Explanation
+Account 1 (0000):
+
+
+All digits are even and zero → 0×1 + 0×2 + 0×3 + 0×4 = 0
+→ abs(0) = 0
+
+
+Account 2 (9999):
+
+
+All digits are odd → -9×1 - 9×2 - 9×3 - 9×4 = -9 -18 -27 -36 = -90
+→ abs(-90) = 90
+
+
+Output: 2 90
+
+Sample Testcase 1
+Testcase Input
+3
+1234
+2468
+1357
+Testcase Output
+2 60
+Explanation
+Account 1 (1234):
+Index 1 → 1 (odd) → -1×1 = -1
+Index 2 → 2 (even) → +2×2 = +4
+Index 3 → 3 (odd) → -3×3 = -9
+Index 4 → 4 (even) → +4×4 = +16
+
+
+Total = -1 + 4 - 9 + 16 = 10 → abs(10) = 10
+
+
+Account 2 (2468):
+All even → 2×1 + 4×2 + 6×3 + 8×4 = 2 + 8 + 18 + 32 = 60
+→ abs(60) = 60
+
+
+Account 3 (1357):
+All odd → -1×1 - 3×2 - 5×3 - 7×4 = -1 - 6 -15 - 28 = -50
+→ abs(-50) = 50
+
+
+Output: 2 60
+
+
+  SOLUITONS:
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static int[] computeSecurityCodeIndex(int N, String[] securityStrings) {
+        int maxCode = -1;
+        int maxIndex = -1;
+
+        for (int i = 0; i < N; i++) {
+            String s = securityStrings[i];
+            int sum = 0;
+
+            for (int j = 0; j < s.length(); j++) {
+                int digit = s.charAt(j) - '0';
+                int pos = j + 1; // 1-based index
+
+                if (digit % 2 == 0) {
+                    sum += digit * pos;
+                } else {
+                    sum -= digit * pos;
+                }
+            }
+
+            int code = Math.abs(sum);
+
+            if (code > maxCode) {
+                maxCode = code;
+                maxIndex = i + 1; // 1-based index
+            }
+        }
+
+        return new int[]{maxIndex, maxCode};
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        String[] securityStrings = new String[N];
+        for (int i = 0; i < N; i++) {
+            securityStrings[i] = scanner.nextLine();
+        }
+
+        int[] result = computeSecurityCodeIndex(N, securityStrings);
+        System.out.println(result[0] + " " + result[1]);
+    }
+}
