@@ -1,0 +1,143 @@
+Tree Bias
+Problem Statement
+Ram was learning the tree data structure when John saw him. Seeing Ram John challenged him to calculate the bias of the tree.
+
+The bias was defined as the sum of the depths of all tree nodes. 
+Given a tree , Help Ram in finding the bias of the tree. Consider node with value 1 as the root of the tree. Consider the depth of the root node as 0.
+
+Input Format
+The first line contains N the number of nodes in the tree. 
+The following N-1 lines contain two numbers, A and B, denoting that there is an edge between A and B
+
+Output Format
+Print a single integer: the sum of the depths of all nodes in the tree.
+
+Constraints
+1<=N<=105
+1<=A<=N
+1<=B<=N
+
+Sample Testcase 0
+Testcase Input
+4
+1 2 
+2 3 
+3 4
+Testcase Output
+6
+Explanation
+The tree would be:
+
+
+
+
+
+The depths of each node of the tree:
+
+
+For node 1 : 0
+
+
+For node 2: 1
+
+
+For node 3: 2
+
+
+For node 4: 3
+
+
+Therefore bias of the tree is : 0 + 1 + 2 + 3 = 6
+
+Sample Testcase 1
+Testcase Input
+7
+1 2 
+2 4 
+2 3 
+1 7 
+7 6
+7 5
+Testcase Output
+10
+Explanation
+The tree would be:
+
+
+
+
+
+The depths of each of the nodes of the tree are:
+
+
+For node 1 : 0
+
+
+For node 2: 1
+
+
+For node 3: 2
+
+
+For node 4: 2
+
+
+For node 5: 2
+
+
+For node 6: 2
+
+
+For node 7: 1
+
+
+Therefore the bias of the tree is the sum of all depths of the tree = 0 + 1 + 2 + 2 + 2 + 2 + 1 = 10
+
+
+  SOLUTIONS:
+
+
+import java.util.*;
+
+public class Main {
+    public static int sumOfDepths(int n, List<int[]> edges) {
+        // Build adjacency list
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] e : edges) {
+            adj.get(e[0]).add(e[1]);
+            adj.get(e[1]).add(e[0]);
+        }
+
+        // DFS traversal
+        boolean[] visited = new boolean[n + 1];
+        return dfs(1, 0, adj, visited);
+    }
+
+    private static int dfs(int node, int depth, List<List<Integer>> adj, boolean[] visited) {
+        visited[node] = true;
+        int sum = depth; // add current node's depth
+        for (int nei : adj.get(node)) {
+            if (!visited[nei]) {
+                sum += dfs(nei, depth + 1, adj, visited);
+            }
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        
+        List<int[]> edges = new ArrayList<>();
+        for (int i = 0; i < n - 1; i++) {
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            edges.add(new int[]{a, b});
+        }
+
+        System.out.println(sumOfDepths(n, edges));
+    }
+}
