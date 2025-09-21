@@ -1,0 +1,167 @@
+Mathew and trees
+Problem Statement
+In a computer science class, Mathew’s computer science teacher gave him an array of size ‘n’ and told him to build a tree model with the element of an array. Now Mathew is working on the task of building a tree with the given integers. Mathew builds the tree, and he wants to print the integers of each level of binary tree from left to right and form a new 2d array.
+
+Now, Mathew wants your helps to find the new array.
+
+Input Format
+The first line contains a integers n – the size of array.
+
+The second line contains the ‘n’ elements of an array
+
+Output Format
+The first line print a single integer ‘k’ – the number of rows in the 2d-array.
+
+Then, ‘k’ lines follow. The ith line contains space-separated integers of that row.
+
+Constraints
+0 ≤  n ≤  5*10^5.
+
+1 <= arr[i] <= 10^3.
+
+-1 denotes the NULL child of a node
+
+Sample Testcase 0
+Testcase Input
+3
+1 -1 2
+Testcase Output
+2
+1 
+2
+Explanation
+
+2 is the number of levels in the tree.
+
+The subsequent lines represent the elements at each level:
+
+Level 1 contains only the root: 1
+
+Level 2 contains the nodes at the next level: 2
+
+
+
+Sample Testcase 1
+Testcase Input
+7
+1 2 3 -1 -1 4 5
+Testcase Output
+3
+1 
+2 3 
+4 5 
+Explanation
+The first line of output, 3, indicates that there are three levels in the tree.
+
+
+The subsequent lines represent the node values at each level:
+
+
+
+The first level has only one node, which is 1.
+
+The second level has nodes 2 and 3.
+
+The third level has nodes 4 and 5.
+
+
+
+  SOLUTIONS:
+
+import java.io.*;
+import java.util.*;
+
+class Main {
+
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int val) { this.val = val; }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        if (n == 0) {
+            System.out.println(0);
+            return;
+        }
+
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        // Build tree using array
+        TreeNode root = buildTree(arr);
+
+        // Level-order traversal
+        List<List<Integer>> levels = levelOrder(root);
+
+        // Print result
+        System.out.println(levels.size());
+        for (List<Integer> level : levels) {
+            for (int val : level) {
+                System.out.print(val + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static TreeNode buildTree(int[] arr) {
+        if (arr.length == 0 || arr[0] == -1) return null;
+
+        TreeNode root = new TreeNode(arr[0]);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        int i = 1;
+        while (i < arr.length) {
+            TreeNode current = queue.poll();
+
+            // Left child
+            if (i < arr.length && arr[i] != -1) {
+                TreeNode left = new TreeNode(arr[i]);
+                current.left = left;
+                queue.offer(left);
+            }
+            i++;
+
+            // Right child
+            if (i < arr.length && arr[i] != -1) {
+                TreeNode right = new TreeNode(arr[i]);
+                current.right = right;
+                queue.offer(right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+
+    private static List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) return result;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                level.add(node.val);
+
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+
+            result.add(level);
+        }
+
+        return result;
+    }
+}
