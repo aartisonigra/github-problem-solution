@@ -1,0 +1,117 @@
+Problem Statement
+You are a toy collector with a budget B dollars. There is a store selling N different types of toys. Each toy type i has:
+
+a price per unit P[i]
+
+a limited stock S[i] (maximum number of units you can buy)
+
+a fun value per unit F[i] (how much fun you get from each unit of that toy)
+
+You want to maximize the total fun value you get by buying some quantity of toys without exceeding your budget B. You can buy any number of units of each toy type from 0 up to its stock limit.
+
+Input Format
+First line contains two integers N and B
+
+Next N lines each contain three integers P[i], S[i], and F[i] — price per unit, stock available, and fun value per unit for the ith toy.
+
+Output Format
+Print the maximum total fun value you can achieve by buying toys within the budget.
+
+Constraints
+1 ≤ N ≤ 100
+
+1 ≤ B ≤ 10,000
+
+1 ≤ P[i],S[i],F[i] ≤ 100
+
+Sample Testcase 0
+Testcase Input
+3 50
+10 3 60
+20 2 100
+5 5 30
+Testcase Output
+300
+Explanation
+Buy 3 units of toy 1: cost = 30, fun = 180
+
+
+Buy 4 units of toy 3: cost = 20, fun = 120
+Total cost = 50 (within budget), total fun = 300 (maximum).
+
+Sample Testcase 1
+Testcase Input
+4 20
+4 5 10
+3 3 7
+8 1 20
+2 4 5
+Testcase Output
+50
+Explanation
+One way to get maximum fun:
+
+
+Buy 1 unit of toy 3: cost 8, fun 20
+
+
+Buy 3 units of toy 1: cost 12, fun 30
+Total cost = 20, total fun = 50
+
+
+No other combination yields more fun within budget.
+
+
+  SOLUTIONS:
+
+import java.util.*;
+
+class Main {
+    public static int calculateMaxFun(int N, int B, int[] price, int[] stock, int[] fun) {
+        int[] dp = new int[B + 1];  // dp[b] = max fun for budget b
+
+        for (int i = 0; i < N; i++) {
+            int p = price[i];
+            int s = stock[i];
+            int f = fun[i];
+
+            // Split stock into powers of 2 (binary representation trick)
+            int k = 1;
+            while (s > 0) {
+                int count = Math.min(k, s);
+                int cost = p * count;
+                int value = f * count;
+
+                // 0/1 knapsack update
+                for (int b = B; b >= cost; b--) {
+                    dp[b] = Math.max(dp[b], dp[b - cost] + value);
+                }
+
+                s -= count;
+                k *= 2;
+            }
+        }
+
+        return dp[B];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int B = scanner.nextInt();
+
+        int[] price = new int[N];
+        int[] stock = new int[N];
+        int[] fun = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            price[i] = scanner.nextInt();
+            stock[i] = scanner.nextInt();
+            fun[i] = scanner.nextInt();
+        }
+
+        System.out.println(calculateMaxFun(N, B, price, stock, fun));
+    }
+}
+
