@@ -1,0 +1,74 @@
+Problem Statement
+Luke has a bookshelf with n books, each with height aia_iai​. He recently bought a new shelf to keep some of his books since the first one was almost full. To add books to his new shelf:
+He walks from left to right, deciding for each book whether to leave it or place it on the new shelf.
+Books on the new shelf must be in strictly increasing order of height.
+Your task is to find the maximum number of books Luke can place on his new shelf in increasing order of height.
+
+Input Format
+The first line of the input contains a single integer n – the number of books.
+The second line of the input contains n space-seperated integers a1, a2, …, an – the height of the books where ai represents the height of the ith book from the left.
+Output Format
+Print a single integer, the maximum number of books he can place on the new shelf satisfying the given conditions.
+
+Constraints
+1 <= n <= 104
+0 <= ai <= 108
+Sample Testcase 0
+Testcase Input
+8
+10 9 2 5 3 7 101 18
+Testcase Output
+4
+Explanation
+Some of the ways to pick out the maximum number of books are [2, 5, 7, 18], [2,5, 7, 101], and [2, 3, 7, 18]. We can see that the maximum number of books that can be placed on the new shelf is 4.
+Sample Testcase 1
+Testcase Input
+6
+9 9 9 9 9 9
+Testcase Output
+1
+Explanation
+We can pick only one of the books because we need them in strictly increasing order of heights.
+
+
+  SOLUITONS:
+
+  import java.util.*;
+
+public class Main {
+    public static int max_books_on_shelf(int[] heights) {
+        // List to keep the current LIS
+        ArrayList<Integer> lis = new ArrayList<>();
+        
+        for (int h : heights) {
+            // Find position to place h using binary search
+            int pos = Collections.binarySearch(lis, h);
+            
+            if (pos < 0) {
+                pos = -(pos + 1); // insertion point
+            }
+            
+            // If h is greater than all elements, extend the LIS
+            if (pos == lis.size()) {
+                lis.add(h);
+            } else {
+                // Otherwise replace element at pos
+                lis.set(pos, h);
+            }
+        }
+        
+        return lis.size(); // length of LIS
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int[] heights = new int[n];
+        for (int i = 0; i < n; i++) {
+            heights[i] = scanner.nextInt();
+        }
+
+        System.out.println(max_books_on_shelf(heights));
+    }
+}
