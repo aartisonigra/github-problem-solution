@@ -1,0 +1,69 @@
+Tom And Jerry
+Problem Statement
+Tom and Jerry, two mischievous characters, are constantly fighting, even over the smallest things. This time, their fight is over a small cookie. The cookie is located at the Kth largest element in a stream of numbers on a number line. Your task is to help Jerry quickly determine the number where the cookie is located.
+
+The Kth largest element is defined as the element that appears at the K-th position when the numbers in the stream are sorted in descending order, considering repetition
+
+Input Format
+The first line contains an integer that denotes the number of elements in the stream.
+The second line contains a single integer, K, which represents the position of the cookie in terms of largest elements.
+The third line contains N space-separated integers, representing the elements in the stream.
+
+Output Format
+Output a single integer, the value of the Kth largest element in the stream where the cookie is located.
+
+Constraints
+ 1 <= N <= 10^5
+-10^4 <= k, arr[i] <= 10^4
+
+Sample Testcase 0
+Testcase Input
+30
+5
+10 10 1 0 1 1 1 9 10 7 2 6 8 7 7 1 5 1 4 5 6 4 6 5 7 8 2 7 9 2
+Testcase Output
+9
+Explanation
+After sorting the array in descending order:
+10,10,9,8,8,7,7,7,7,7,6,6,6,5,5,5,4,4,2,2,2,1,1,1,1,1,0
+The 5th largest element (including repetitions) is 9.
+
+Sample Testcase 1
+Testcase Input
+10
+4
+-3 -7 -8 -3 6 10 7 -5 -8 10
+Testcase Output
+6
+Explanation
+After sorting the array in descending order:
+10,10,7,6,−3,−3,−5,−7,−8,−8
+The 4th largest element is 6.
+
+  SOLUTIONS:
+
+import java.util.*;
+
+public class Main {
+    public static int findKthLargest(int[] nums, int k) {
+        // Array को sort करो descending order में
+        Arrays.sort(nums);
+        
+        // Arrays.sort ascending करता है, इसलिए k-th largest = nums[nums.length - k]
+        return nums[nums.length - k];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt(); // number of elements
+        int k = scanner.nextInt(); // kth largest
+        int[] nums = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        
+        System.out.println(findKthLargest(nums, k));
+    }
+}
