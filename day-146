@@ -1,0 +1,112 @@
+Happy Number
+Problem Statement
+Write an algorithm to determine if a number N is a "good" number.
+
+A "good" number is defined by the following process:
+
+Break the number into its digits.
+Square each digit and sum the squares.
+Replace the original number with this sum.
+Repeat steps 1-3 until the number becomes 1 or the process enters a cycle that does not include 1.
+If the process eventually reaches 1, the number is considered "good". If the process enters a cycle that does not include 1, the number is not "good".
+
+Here N is an integer.
+
+Input Format
+First and only line of input contains the starting number N. 
+
+Output Format
+Return true if N is a good number, and false if it is not.
+
+Constraints
+1 <= N <= 2^31 -1
+
+Sample Testcase 0
+Testcase Input
+2
+Testcase Output
+false
+Explanation
+
+Starting with the number 2:
+
+2→ 2^2 = 4
+
+4→ 4^2 = 16
+
+16→ 1^2+6^2 = 1+36 = 37
+
+37→ 3^2+7^2 = 9+49 = 58
+
+58→ 5^2+8^2 = 25+64 = 89
+
+89→ 8^2+9^2 = 64+81 = 145
+
+145→ 1^2+4^2+5^2 = 1+16+25 = 42
+
+42→ 4^2+2^2 = 16+4 = 20
+
+20→ 2^2+0^2 = 4
+
+At this point, the sequence enters a cycle: 4→16→37→58→89→145→42→20→4.
+
+Since the number 4 appears again, the process will continue in this cycle endlessly without ever reaching 1. Therefore, the number 2 is not a "good" number according to the given definition.
+
+Sample Testcase 1
+Testcase Input
+19
+Testcase Output
+true
+Explanation
+
+Number: 19
+The sum of squares of its digits = 1^2 + 9^2 = 1 + 81 = 82
+Number: 82
+The sum of squares of its digits = 8^2 + 2^2 = 64 + 4 = 68
+Number: 68
+The sum of squares of its digits = 6^2 + 8^2 = 36 + 64 = 100
+Number: 100
+The sum of squares of its digits = 1^2 + 0^2 + 0^2 = 1 + 0 + 0 = 1
+At this point, the number becomes 1, and since it reaches 1, the output is "true". This indicates that 19 is a happy number according to the rules defined in the program.
+
+
+  SOLUTIONS:
+
+  #include <stdio.h>
+#include <stdbool.h>
+
+int sum_of_squares(int n) {
+    int sum = 0;
+    while (n > 0) {
+        int digit = n % 10;
+        sum += digit * digit;
+        n /= 10;
+    }
+    return sum;
+}
+
+bool is_happy_number(int n) {
+    int slow = n;
+    int fast = n;
+
+    // Floyd's Cycle Detection (tortoise-hare algorithm)
+    do {
+        slow = sum_of_squares(slow);             // move one step
+        fast = sum_of_squares(sum_of_squares(fast)); // move two steps
+    } while (slow != fast);
+
+    // if it ends at 1 → happy (good) number
+    return (slow == 1);
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+
+    if (is_happy_number(n))
+        printf("true\n");
+    else
+        printf("false\n");
+
+    return 0;
+}
