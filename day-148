@@ -1,0 +1,110 @@
+Answer Queries
+Problem Statement
+You were learning the array data structure, till your friend challenged you with a problem. Given an array of queries of positive integers between 1 and k, you have to process all queries[i]  according to the following rules:
+
+In the beginning, you have the permutation P=[1,2,3,...,m].
+For the current i, find the position of queries[i] in the permutation P (indexing from 0) and then move this at the beginning of the permutation P.
+Notice that the position of queries[i] in the permutation P is the result for queries[i].
+Print an array containing the result for the given queries.
+
+ 
+
+Input Format
+The first line contains m, the initial permutation P = [1,2,3,….,m]
+
+The following line contains q, the number of queries
+
+The following line contains q numbers denoting the ith query, starting from 0 to q-1.
+
+Output Format
+Print the result of all queries, in a space-separated single-line fashion.
+
+Constraints
+1<=m<=5*104
+
+1<=q<=m
+
+1<=queries[i]<=m
+
+Sample Testcase 0
+Testcase Input
+4
+3 
+3 1 2 
+
+
+Testcase Output
+2 1 2 
+
+Explanation
+For q=0: query =3, P=[1,2,3,4,5], position of 3 in P is index 2, then we move 3 to the beginning of P resulting in P=[3,1,2,4,5].
+For q=1: query=1, P=[3,1,2,4,5], position of 1 in P is index 1, then we move 1 to the beginning of P resulting in P=[1,3,2,4,5]. 
+For q=2: query=2, P=[1,3,2,4,5], position of 2 in P is index 2, then we move 2 to the beginning of P resulting in P=[2,1,3,4,5].
+
+Sample Testcase 1
+Testcase Input
+3
+3
+2 2 1 
+
+Testcase Output
+1 0 1
+
+Explanation
+For q=0: query =2, P=[1,2,3], position of 2 in P is index 1, then we move 2 to the beginning of P resulting in P=[2,1,3].
+For q=1: query=2, P=[2,1,3], position of 2 in P is index 0, then we move 2 to the beginning of P resulting in P=[2,1,3]. 
+For q=2: query=1, P=[2,1,3], position of 1 in P is index 1, then we move 1 to the beginning of P resulting in P=[1,2,3].
+
+  SOLUTIONS:
+
+
+  #include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int m, q;
+    scanf("%d", &m);   // Size of permutation
+    int* P = (int*)malloc(m * sizeof(int));
+    
+    // Initialize permutation P = [1, 2, ..., m]
+    for(int i = 0; i < m; i++) {
+        P[i] = i + 1;
+    }
+    
+    scanf("%d", &q);   // Number of queries
+    int* queries = (int*)malloc(q * sizeof(int));
+    
+    for(int i = 0; i < q; i++) {
+        scanf("%d", &queries[i]);
+    }
+    
+    for(int i = 0; i < q; i++) {
+        int query = queries[i];
+        int pos = 0;
+        
+        // Find position of query in P
+        for(int j = 0; j < m; j++) {
+            if(P[j] == query) {
+                pos = j;
+                break;
+            }
+        }
+        
+        printf("%d ", pos);
+        
+        // Move query to the beginning
+        int temp = P[pos];
+        for(int j = pos; j > 0; j--) {
+            P[j] = P[j - 1];
+        }
+        P[0] = temp;
+    }
+    
+    printf("\n");
+    
+    free(P);
+    free(queries);
+    
+    return 0;
+}
+
