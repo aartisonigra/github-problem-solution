@@ -1,0 +1,96 @@
+Petrol Prices
+Problem Statement
+Startled by the recent instability in petrol prices, Harsh decided to find out the pattern to buy petrol when it is cheapest. To do so, he collected the data of petrol prices over the last N days. While decoding the pattern, he gets stuck and asks for your help.
+
+Given the petrol prices from day 1 to N, for each day, Harsh wants you to find out the minimum number of days after which the petrol price is strictly higher than the current day.
+
+If there is no future day for which this is possible, let the answer for that day be 0.
+
+Input Format
+The first line of the input contains a single integer N representing the number of days in the data.
+
+The second line contains N space separated integers A1, A2, …, An, where Ai represents the price of petrol on the ith day.
+
+Output Format
+Print N integers d1, d2, …, dn such that petrol price on the (i+di)th day is the first day after the ith day when price is strictly greater than the price on the ith day.
+
+Constraints
+1 <= N <= 105
+
+1 <= Ai<= 105
+
+Sample Testcase 0
+Testcase Input
+8
+73 74 75 71 69 72 76 73
+
+
+
+
+Input
+Testcase Output
+1 1 4 2 1 1 0 0
+Explanation
+For each day, we find the next day with a higher price. If no such day exists, we output 0.
+
+For day 1, the next day with price higher than it is day 2, so the answer is 2-1 = 1
+For day 2, the next day with price higher than it is day 3, so the answer is 3-2 = 1
+For day 3, the next day with price higher than it is day 7, so the answer is 7-3 = 4
+For day 4, the next day with price higher than it is day 6, so the answer is 6-4 = 2
+For day 5, the next day with price higher than it is day 6, so the answer is 6-5 = 1
+For day 6, the next day with price higher than it is day 7, so the answer is 7-6 = 1
+For days 7 and 8, there are no days after them with a higher price, so the answers for both of them will be 0.
+
+Sample Testcase 1
+Testcase Input
+4
+30 40 50 60
+Testcase Output
+1 1 1 0
+
+Explanation
+For each day, the next day's price is higher, except for the last day where there's no future day. Hence, the output is 1 for the first three days and 0 for the last day.
+
+Price at day 2 is higher than day 1, so the answer for day 1 will be 2-1 = 1
+Price at day 3 is higher than day 2, so the answer for day 2 will be 3-2 = 1
+Price at day 4 is higher than day 3, so the answer for day 3 will be 4-3 = 1
+
+
+There is no day after day 5, so the answer for day 4 will be 0
+
+
+  SOLUTIONS:
+import java.util.*;
+
+public class Main {
+    public static void petrolPriceDays(int n, List<Integer> prices) {
+        int[] ans = new int[n];
+        Stack<Integer> stack = new Stack<>(); // stack stores indices
+
+        for (int i = 0; i < n; i++) {
+            // जब तक next price ज़्यादा हो, तब तक stack से pop करके answer निकालो
+            while (!stack.isEmpty() && prices.get(i) > prices.get(stack.peek())) {
+                int idx = stack.pop();
+                ans[idx] = i - idx; // distance (days difference)
+            }
+            stack.push(i);
+        }
+
+        // बचे हुए days जिनका कोई greater day नहीं मिला, उनका answer 0 रहेगा
+        for (int x : ans)
+            System.out.print(x + " ");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        List<Integer> prices = new ArrayList<>();
+        for (int i = 0; i < n; i++)
+            prices.add(sc.nextInt());
+
+        petrolPriceDays(n, prices);
+    }
+}
+
+
+  
