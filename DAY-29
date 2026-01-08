@@ -1,0 +1,92 @@
+Shortest Substring
+Problem Statement
+Alice, a spy, needs to decode a message that was intercepted from an enemy agent.  The message is encoded as a substring of a longer string S, and Alice knows that the substring contains all the characters of a secret code L.
+
+She needs to find the shortest substring of S that contains all the characters of L in any order. If there is no such substring, output -1.
+
+Input Format
+The first line contains the longer string S (1 ≤ |S| ≤ 10^5), consisting of printable ASCII characters.
+The second line contains the secret code L (1 ≤ |L| ≤ 10^5), consisting of printable ASCII characters.
+
+Output Format
+The length of the shortest substring of S that contains all the characters of L in any order. If there is no such substring, output -1.
+
+Constraints
+Each character of S and T is a printable ASCII character.
+1 ≤ |L| ≤ |S| ≤ 10^5
+
+Sample Testcase 0
+Testcase Input
+abbadcab 
+abc
+Testcase Output
+3
+Explanation
+The shortest substring of S that contains all the characters of L is "bac", which has length 3.
+Sample Testcase 1
+Testcase Input
+Hello, World! 
+XYZ
+Testcase Output
+-1
+Explanation
+There is no substring of S that contains all the characters of T.
+
+
+SOLUTIONS:
+import java.util.*;
+
+public class Main {
+    public static int shortestSubstringLength(String S, String L) {
+        if (L.length() > S.length()) return -1;
+
+        Map<Character, Integer> need = new HashMap<>();
+        for (char ch : L.toCharArray()) {
+            need.put(ch, need.getOrDefault(ch, 0) + 1);
+        }
+
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0;
+        int valid = 0;
+        int minLength = Integer.MAX_VALUE;
+
+        while (right < S.length()) {
+            char ch = S.charAt(right);
+            right++;
+
+            if (need.containsKey(ch)) {
+                window.put(ch, window.getOrDefault(ch, 0) + 1);
+                if (window.get(ch).intValue() == need.get(ch).intValue()) {
+                    valid++;
+                }
+            }
+
+            while (valid == need.size()) {
+                if (right - left < minLength) {
+                    minLength = right - left;
+                }
+
+                char d = S.charAt(left);
+                left++;
+
+                if (need.containsKey(d)) {
+                    if (window.get(d).intValue() == need.get(d).intValue()) {
+                        valid--;
+                    }
+                    window.put(d, window.get(d) - 1);
+                }
+            }
+        }
+
+        return (minLength == Integer.MAX_VALUE) ? -1 : minLength;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String S = scanner.nextLine();  // Longer string S
+        String L = scanner.nextLine();  // Secret code L
+        int result = shortestSubstringLength(S, L);
+        System.out.println(result);
+    }
+}
+
