@@ -1,0 +1,125 @@
+Minimum Cost to Connect All Nodes
+Problem Statement
+You are given a weighted, undirected graph with n nodes and m edges. The nodes are numbered from 0 to n-1. Each edge has a weight, and your task is to connect all the nodes such that the total cost of the edges is minimized. You need to find the minimum cost to connect all nodes in the graph. If it is not possible to connect all nodes (i.e., if the graph is not fully connected), return -1.
+
+Input Format
+The first line contains two integers n and m (1 ≤ n ≤ 10^5, 0 ≤ m ≤ 10^5), the number of nodes and edges in the graph.
+The next m lines contain three integers u, v, and w (0 ≤ u, v < n, 1 ≤ w ≤ 10^6), representing an edge between nodes u and v with a weight w.
+Output Format
+Print a single integer: the minimum cost to connect all the nodes, or -1 if it is impossible to connect all the nodes.
+
+Constraints
+1 ≤ n ≤ 10^5
+0 ≤ m ≤ 10^5
+1 ≤ w ≤ 10^6
+0 ≤ u, v < n
+Sample Testcase 0
+Testcase Input
+4 2
+0 1 10
+1 2 5
+Testcase Output
+-1
+Explanation
+n this case, the available edges are insufficient to connect all the nodes in the graph. As a result, it is not possible to construct a spanning tree. Therefore, the final answer is -1.
+
+Sample Testcase 1
+Testcase Input
+4 5
+0 1 10
+0 2 6
+0 3 5
+1 3 15
+2 3 4
+Testcase Output
+19
+Explanation
+The Minimum Spanning Tree (MST) consists of the following edges:
+
+
+
+Edge between vertices 0 and 3 with a weight of 5
+
+Edge between vertices 2 and 3 with a weight of 4
+
+Edge between vertices 0 and 1 with a weight of 10
+
+
+SOLTUIONS:
+
+import java.util.*;
+
+class Edge {
+    int u, v, w;
+    Edge(int u, int v, int w) {
+        this.u = u;
+        this.v = v;
+        this.w = w;
+    }
+}
+
+class DSU {
+    int[] parent, rank;
+
+    DSU(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]); // Path compression
+        return parent[x];
+    }
+
+    boolean union(int x, int y) {
+        int px = find(x);
+        int py = find(y);
+        if (px == py) return false;
+
+        if (rank[px] < rank[py]) parent[px] = py;
+        else if (rank[px] > rank[py]) parent[py] = px;
+        else {
+            parent[py] = px;
+            rank[px]++;
+        }
+        return true;
+    }
+}
+
+public class Main {
+    public static int minimumCost(int n, int m, List<Edge> edges) {
+        Collections.sort(edges, (a, b) -> a.w - b.w); // Sort edges by weight
+        DSU dsu = new DSU(n);
+
+        int cost = 0;
+        int edgesUsed = 0;
+
+        for (Edge edge : edges) {
+            if (dsu.union(edge.u, edge.v)) {
+                cost += edge.w;
+                edgesUsed++;
+            }
+        }
+
+        // Check if we have used (n - 1) edges (MST condition)
+        return (edgesUsed == n - 1) ? cost : -1;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            int w = scanner.nextInt();
+            edges.add(new Edge(u, v, w));
+        }
+
+        int result = minimumCost(n, m, edges);
+        System.out.println(result);
+    }
+}
